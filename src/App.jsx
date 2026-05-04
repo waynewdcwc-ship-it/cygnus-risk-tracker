@@ -163,7 +163,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v0.7
+        Interactive global map · v0.8
       </div>
     </div>
   );
@@ -414,7 +414,7 @@ function SourceMethodologyPanel() {
           Prototype status
         </h3>
         <p className="mt-2 text-sm leading-6 text-slate-700">
-          In v0.7, all current source fields are structural placeholders. They
+          In v0.8, all current source fields are structural placeholders. They
           demonstrate how the tracker can later present curated, source-backed
           risk indicators without yet claiming live intelligence validation.
         </p>
@@ -854,7 +854,7 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
           <div className="print-meta">
             <div className="print-meta-label">Tracker Version</div>
-            <div className="print-meta-value">v0.7 Prototype</div>
+            <div className="print-meta-value">v0.8 Public Preview</div>
           </div>
 
           <div className="print-meta">
@@ -953,8 +953,8 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
         <div className="print-disclaimer">
           <strong>Disclaimer:</strong> This briefing is generated from the
-          Cygnus Global Strategic Risk Intelligence Tracker prototype. Current
-          content uses illustrative/sample risk indicators and source
+          Cygnus Global Strategic Risk Intelligence Tracker public preview.
+          Current content uses illustrative/sample risk indicators and source
           placeholders. It is intended to support strategic awareness, scenario
           thinking, and decision support. It should not be treated as official
           intelligence, legal advice, financial advice, or a substitute for
@@ -1030,7 +1030,7 @@ export default function App() {
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                   <Shield className="h-4 w-4 text-[#0a3d91]" />
-                  Tracker v0.7 · Executive Briefing Mode
+                  Tracker v0.8 · Public Preview &amp; Polish
                 </div>
 
                 <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -1137,14 +1137,37 @@ export default function App() {
 
                 <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v0.7 enhancement
+                    v0.8 enhancement
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    This version adds an executive briefing mode for a concise
-                    strategic overview while retaining the full dashboard and
-                    print briefing workflow.
+                    This version improves mobile display, print formatting,
+                    public preview clarity, and overall presentation polish while
+                    retaining the full dashboard and executive briefing workflow.
                   </p>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-5 pt-6 md:px-8">
+          <div className="rounded-3xl border border-amber-200 bg-amber-50 p-4 shadow-sm md:p-5">
+            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
+                  Public preview prototype
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-700">
+                  This tracker is currently a public-facing prototype using
+                  illustrative sample indicators. It demonstrates the Cygnus
+                  risk intelligence structure, dashboard workflow, briefing
+                  layer, and source credibility model. It should not yet be
+                  treated as live intelligence reporting.
+                </p>
+              </div>
+
+              <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-semibold text-[#0a2f73]">
+                Version 0.8
               </div>
             </div>
           </div>
@@ -1370,7 +1393,7 @@ export default function App() {
                 <SectionTitle
                   icon={Database}
                   title="Data Structure"
-                  subtitle="v0.7 supports both dashboard and executive briefing workflows."
+                  subtitle="v0.8 supports dashboard, executive briefing, and public preview workflows."
                 />
 
                 <div className="space-y-3">
@@ -1449,6 +1472,28 @@ export default function App() {
             </div>
           </section>
         )}
+
+        <footer className="mx-auto max-w-7xl px-5 pb-8 md:px-8">
+          <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 text-sm text-slate-600 shadow-sm md:p-6">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="font-semibold text-[#0a2f73]">
+                  Cygnus Development
+                </p>
+                <p className="mt-1 text-xs uppercase tracking-[0.18em] text-[#b8862b]">
+                  Risk Intelligence Technology
+                </p>
+              </div>
+
+              <div className="text-left md:text-right">
+                <p>Cygnus Global Strategic Risk Intelligence Tracker</p>
+                <p className="mt-1 text-xs">
+                  v0.8 public preview · Illustrative prototype data
+                </p>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
 
       <PrintableBriefing
