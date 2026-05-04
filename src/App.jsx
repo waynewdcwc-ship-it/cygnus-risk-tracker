@@ -23,13 +23,23 @@ import {
   Database,
   CheckCircle2,
   BarChart3,
+  Link2,
+  ExternalLink,
+  Eye,
+  FileSearch,
 } from "lucide-react";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { riskItems, watchpoints, lastUpdated, methodology } from "./riskData";
+import {
+  riskItems,
+  watchpoints,
+  lastUpdated,
+  methodology,
+  sourceMethodology,
+} from "./riskData";
 
 const levelStyles = {
   Low: "bg-emerald-50 text-emerald-700 border-emerald-200",
@@ -148,6 +158,8 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
                 </span>
                 <br />
                 <span>Confidence: {item.confidence}</span>
+                <br />
+                <span>Source: {item.sourceReliability}</span>
               </div>
             </Popup>
           </Marker>
@@ -155,7 +167,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v0.4
+        Interactive global map · v0.5
       </div>
     </div>
   );
@@ -212,7 +224,7 @@ function MethodologyPanel() {
         <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
           <div className="mb-3 flex items-center gap-2 text-[#0a3d91]">
             <Shield className="h-4 w-4" />
-            <h3 className="font-semibold">Confidence</h3>
+            <h3 className="font-semibold">Assessment Confidence</h3>
           </div>
 
           <p className="text-sm leading-6 text-slate-600">
@@ -224,6 +236,192 @@ function MethodologyPanel() {
             not yet represent validated intelligence assessments.
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function SourceIntelligencePanel({ selectedItem }) {
+  return (
+    <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+      <SectionTitle
+        icon={FileSearch}
+        title="Source Intelligence Layer"
+        subtitle="v0.5 introduces structured source reliability and information confidence fields."
+      />
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <div className="flex items-center gap-2 text-[#0a3d91]">
+            <Shield className="h-4 w-4" />
+            <h3 className="font-semibold">Source Reliability</h3>
+          </div>
+
+          <p className="mt-3 text-2xl font-bold text-[#0a2f73]">
+            {selectedItem.sourceReliability}
+          </p>
+
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            This indicates the assessed reliability of the source base
+            supporting the selected indicator.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <div className="flex items-center gap-2 text-[#0a3d91]">
+            <Eye className="h-4 w-4" />
+            <h3 className="font-semibold">Information Confidence</h3>
+          </div>
+
+          <p className="mt-3 text-2xl font-bold text-[#0a2f73]">
+            {selectedItem.informationConfidence}
+          </p>
+
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            This reflects how strongly the available information supports the
+            current assessment.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <div className="flex items-center gap-2 text-[#0a3d91]">
+            <Database className="h-4 w-4" />
+            <h3 className="font-semibold">Source Type</h3>
+          </div>
+
+          <p className="mt-3 text-lg font-bold text-[#0a2f73]">
+            {selectedItem.sourceType}
+          </p>
+
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            The current tracker still uses sample data, but this structure
+            prepares it for future source-backed entries.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-[#e3e8ef] bg-white p-4">
+        <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
+          <Info className="h-4 w-4" />
+          Source Summary
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-slate-700">
+          {selectedItem.sourceSummary}
+        </p>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-[#e3e8ef] bg-white p-4">
+        <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
+          <Link2 className="h-4 w-4" />
+          Source References
+        </h3>
+
+        <div className="mt-3 grid gap-3">
+          {selectedItem.sourceReferences.map((source, index) => (
+            <div
+              key={`${source.label}-${index}`}
+              className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4"
+            >
+              <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <p className="font-semibold text-[#0a2f73]">
+                    {source.label}
+                  </p>
+                  <p className="mt-1 text-xs uppercase tracking-wide text-slate-500">
+                    {source.type}
+                  </p>
+                </div>
+
+                {source.url ? (
+                  <a
+                    href={source.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white px-3 py-1.5 text-xs font-semibold text-[#0a3d91] hover:border-[#0a3d91]"
+                  >
+                    Open source
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                ) : (
+                  <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-xs font-semibold text-[#b8862b]">
+                    No external link yet
+                  </span>
+                )}
+              </div>
+
+              <p className="mt-3 text-sm leading-6 text-slate-600">
+                {source.note}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SourceMethodologyPanel() {
+  return (
+    <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+      <SectionTitle
+        icon={Shield}
+        title="Source Reliability Methodology"
+        subtitle="How future source-backed entries can be graded and explained."
+      />
+
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <h3 className="mb-3 flex items-center gap-2 font-semibold text-[#0a2f73]">
+            <FileSearch className="h-4 w-4" />
+            Source Reliability
+          </h3>
+
+          <div className="space-y-3">
+            {sourceMethodology.sourceReliability.map((item) => (
+              <div
+                key={item.rating}
+                className="rounded-xl border border-[#e3e8ef] bg-white p-3"
+              >
+                <p className="font-semibold text-[#0a2f73]">{item.rating}</p>
+                <p className="mt-1 text-sm leading-6 text-slate-600">
+                  {item.meaning}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <h3 className="mb-3 flex items-center gap-2 font-semibold text-[#0a2f73]">
+            <Eye className="h-4 w-4" />
+            Information Confidence
+          </h3>
+
+          <div className="space-y-3">
+            {sourceMethodology.informationConfidence.map((item) => (
+              <div
+                key={item.rating}
+                className="rounded-xl border border-[#e3e8ef] bg-white p-3"
+              >
+                <p className="font-semibold text-[#0a2f73]">{item.rating}</p>
+                <p className="mt-1 text-sm leading-6 text-slate-600">
+                  {item.meaning}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
+          Prototype status
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-slate-700">
+          In v0.5, all current source fields are structural placeholders. They
+          demonstrate how the tracker can later present curated, source-backed
+          risk indicators without yet claiming live intelligence validation.
+        </p>
       </div>
     </div>
   );
@@ -243,6 +441,7 @@ function SelectedBriefing({ selectedItem }) {
         <MetadataPill>Confidence: {selectedItem.confidence}</MetadataPill>
         <MetadataPill>Trend: {selectedItem.trend}</MetadataPill>
         <MetadataPill>Updated: {selectedItem.lastUpdated}</MetadataPill>
+        <MetadataPill>Source: {selectedItem.sourceReliability}</MetadataPill>
       </div>
 
       <h3 className="mt-4 text-xl font-semibold text-[#0a2f73]">
@@ -293,7 +492,7 @@ function SelectedBriefing({ selectedItem }) {
         </ul>
       </div>
 
-      <div className="mt-4 grid gap-4 md:grid-cols-3">
+      <div className="mt-4 grid gap-4 md:grid-cols-4">
         <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
           <p className="text-xs uppercase tracking-wide text-slate-500">
             Source type
@@ -305,19 +504,28 @@ function SelectedBriefing({ selectedItem }) {
 
         <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
           <p className="text-xs uppercase tracking-wide text-slate-500">
-            Assessment status
+            Source reliability
           </p>
           <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
-            {selectedItem.assessmentStatus}
+            {selectedItem.sourceReliability}
           </p>
         </div>
 
         <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
           <p className="text-xs uppercase tracking-wide text-slate-500">
-            Source note
+            Information confidence
           </p>
           <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
-            {selectedItem.sourceNote}
+            {selectedItem.informationConfidence}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <p className="text-xs uppercase tracking-wide text-slate-500">
+            Assessment status
+          </p>
+          <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+            {selectedItem.assessmentStatus}
           </p>
         </div>
       </div>
@@ -393,7 +601,7 @@ export default function App() {
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                 <Shield className="h-4 w-4 text-[#0a3d91]" />
-                Tracker v0.4 · Methodology & Briefing Layer
+                Tracker v0.5 · Source Credibility Layer
               </div>
 
               <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -468,11 +676,12 @@ export default function App() {
 
               <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                 <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                  v0.4 enhancement
+                  v0.5 enhancement
                 </p>
                 <p className="mt-1 text-sm leading-6 text-slate-700">
-                  This version adds methodology explanations, indicator metadata,
-                  and a structured briefing layer.
+                  This version adds structured source reliability, information
+                  confidence, reference placeholders, and a source methodology
+                  layer.
                 </p>
               </div>
             </div>
@@ -554,6 +763,10 @@ export default function App() {
                         <TrendIcon trend={item.trend} /> {item.trend}
                       </span>
                     </div>
+
+                    <div className="mt-3 rounded-xl border border-[#e3e8ef] bg-[#f8fafc] px-3 py-2 text-xs text-slate-600">
+                      Source: {item.sourceReliability}
+                    </div>
                   </button>
                 );
               })}
@@ -591,7 +804,7 @@ export default function App() {
               <SectionTitle
                 icon={Info}
                 title="Selected Indicator"
-                subtitle="Current indicator metadata and assessment status."
+                subtitle="Current indicator metadata and source status."
               />
 
               <div className="flex flex-wrap items-center gap-2">
@@ -611,10 +824,19 @@ export default function App() {
               <div className="mt-4 grid gap-3">
                 <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
                   <p className="text-xs uppercase tracking-wide text-slate-500">
-                    Source type
+                    Source reliability
                   </p>
                   <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
-                    {selectedItem.sourceType}
+                    {selectedItem.sourceReliability}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">
+                    Information confidence
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                    {selectedItem.informationConfidence}
                   </p>
                 </div>
 
@@ -624,15 +846,6 @@ export default function App() {
                   </p>
                   <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
                     {selectedItem.assessmentStatus}
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
-                  <p className="text-xs uppercase tracking-wide text-slate-500">
-                    Last updated
-                  </p>
-                  <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
-                    {selectedItem.lastUpdated}
                   </p>
                 </div>
               </div>
@@ -645,7 +858,15 @@ export default function App() {
         </div>
 
         <div className="mt-6">
+          <SourceIntelligencePanel selectedItem={selectedItem} />
+        </div>
+
+        <div className="mt-6">
           <MethodologyPanel />
+        </div>
+
+        <div className="mt-6">
+          <SourceMethodologyPanel />
         </div>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
@@ -675,37 +896,37 @@ export default function App() {
             <SectionTitle
               icon={Database}
               title="Data Structure"
-              subtitle="v0.4 prepares the tracker for future real-data integration."
+              subtitle="v0.5 prepares the tracker for source-backed risk intelligence."
             />
 
             <div className="space-y-3">
               <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                 <p className="font-semibold text-[#0a2f73]">
-                  Separate data file
+                  Source fields added
                 </p>
                 <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Risk indicators are now held in a dedicated data structure,
-                  making future updates easier and safer.
+                  Indicators can now carry source reliability, information
+                  confidence, source summaries, and reference placeholders.
                 </p>
               </div>
 
               <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                 <p className="font-semibold text-[#0a2f73]">
-                  Metadata-ready indicators
+                  Reference-ready structure
                 </p>
                 <p className="mt-2 text-sm leading-6 text-slate-600">
-                  Each indicator can now carry update dates, source type,
-                  assessment status, and confidence notes.
+                  Each indicator can later link to curated OSINT references,
+                  official releases, analyst notes, or data feeds.
                 </p>
               </div>
 
               <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                 <p className="font-semibold text-[#0a2f73]">
-                  Future source integration
+                  Credibility layer
                 </p>
                 <p className="mt-2 text-sm leading-6 text-slate-600">
-                  This structure can later support curated OSINT references,
-                  analyst notes, and AI-assisted briefing generation.
+                  The tracker now separates source reliability from assessment
+                  confidence, which is important for professional analysis.
                 </p>
               </div>
             </div>
@@ -733,9 +954,9 @@ export default function App() {
               </h3>
               <p className="mt-2 text-sm leading-6 text-slate-700">
                 This tracker currently uses sample data and illustrative risk
-                indicators. Future versions may incorporate curated open-source
-                information, structured data inputs, and AI-assisted analysis.
-                The tracker is intended to support strategic awareness, scenario
+                indicators. Source references and reliability fields are
+                structural placeholders for future source-backed entries. The
+                tracker is intended to support strategic awareness, scenario
                 thinking, and decision support. It should not be treated as
                 official intelligence, legal advice, financial advice, or a
                 substitute for professional judgement.

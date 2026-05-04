@@ -17,6 +17,18 @@ const prototypeMetadata = {
   assessmentStatus: "Prototype assessment",
   confidenceNote:
     "Confidence reflects the illustrative quality of the sample indicator and is not based on live-source validation.",
+  sourceReliability: "Not yet validated",
+  informationConfidence: "Illustrative only",
+  sourceSummary:
+    "This entry is currently based on prototype sample content. Future versions may include curated OSINT sources, analyst notes, official releases, media monitoring, data feeds, and AI-assisted source synthesis.",
+  sourceReferences: [
+    {
+      label: "Prototype reference placeholder",
+      type: "Internal sample data",
+      url: "",
+      note: "No external source has been attached to this prototype indicator yet.",
+    },
+  ],
 };
 
 export const riskItems = [
@@ -245,4 +257,51 @@ export const methodology = {
   ],
   confidence:
     "Confidence reflects how strongly the available information supports the indicator assessment. In this prototype, confidence levels are illustrative and should not be treated as validated intelligence judgements.",
+};
+
+export const sourceMethodology = {
+  sourceReliability: [
+    {
+      rating: "High",
+      meaning:
+        "Information is drawn from authoritative, primary, or consistently reliable sources.",
+    },
+    {
+      rating: "Medium",
+      meaning:
+        "Information is drawn from credible but potentially incomplete sources, or from multiple sources with some uncertainty.",
+    },
+    {
+      rating: "Low",
+      meaning:
+        "Information is limited, uncorroborated, preliminary, or from sources requiring caution.",
+    },
+    {
+      rating: "Not yet validated",
+      meaning:
+        "The entry has not yet been linked to validated external sources and should be treated as prototype content.",
+    },
+  ],
+  informationConfidence: [
+    {
+      rating: "High",
+      meaning:
+        "The available information strongly supports the assessment and is unlikely to materially change without significant new developments.",
+    },
+    {
+      rating: "Medium",
+      meaning:
+        "The available information supports the assessment, but important uncertainties remain.",
+    },
+    {
+      rating: "Low",
+      meaning:
+        "The assessment is plausible but rests on limited, early, ambiguous, or incomplete information.",
+    },
+    {
+      rating: "Illustrative only",
+      meaning:
+        "This assessment is included to demonstrate structure and workflow only. It is not a validated intelligence judgement.",
+    },
+  ],
 };
