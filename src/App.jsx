@@ -23,6 +23,8 @@ import {
   FileSearch,
   Printer,
   Download,
+  HelpCircle,
+  ListChecks,
 } from "lucide-react";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -163,76 +165,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v1.0 Public Preview
-      </div>
-    </div>
-  );
-}
-
-function MethodologyPanel() {
-  return (
-    <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-      <SectionTitle
-        icon={BookOpen}
-        title="Risk Methodology"
-        subtitle="How the tracker frames risk level, trend, and confidence."
-      />
-
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-          <div className="mb-3 flex items-center gap-2 text-[#0a3d91]">
-            <BarChart3 className="h-4 w-4" />
-            <h3 className="font-semibold">Risk Levels</h3>
-          </div>
-
-          <div className="space-y-3">
-            {methodology.riskLevels.map((item) => (
-              <div key={item.level}>
-                <LevelPill level={item.level} />
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  {item.meaning}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-          <div className="mb-3 flex items-center gap-2 text-[#0a3d91]">
-            <TrendingUp className="h-4 w-4" />
-            <h3 className="font-semibold">Trend Direction</h3>
-          </div>
-
-          <div className="space-y-3">
-            {methodology.trends.map((item) => (
-              <div key={item.trend}>
-                <p className="inline-flex items-center gap-1 rounded-full border border-[#d8dee8] bg-white px-3 py-1 text-xs font-semibold text-slate-700">
-                  <TrendIcon trend={item.trend} /> {item.trend}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  {item.meaning}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-          <div className="mb-3 flex items-center gap-2 text-[#0a3d91]">
-            <Shield className="h-4 w-4" />
-            <h3 className="font-semibold">Assessment Confidence</h3>
-          </div>
-
-          <p className="text-sm leading-6 text-slate-600">
-            {methodology.confidence}
-          </p>
-
-          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-slate-700">
-            Current confidence ratings support demonstration and public preview
-            use only. They should not yet be treated as formal intelligence
-            judgements.
-          </div>
-        </div>
+        Interactive global map · v1.1 Public Preview
       </div>
     </div>
   );
@@ -243,8 +176,8 @@ function SourceIntelligencePanel({ selectedItem }) {
     <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
       <SectionTitle
         icon={FileSearch}
-        title="Source Intelligence Layer"
-        subtitle="Structured source reliability and information confidence fields."
+        title="Source References"
+        subtitle="Selected source-backed sample references for the current indicator."
       />
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -310,7 +243,7 @@ function SourceIntelligencePanel({ selectedItem }) {
       <div className="mt-4 rounded-2xl border border-[#e3e8ef] bg-white p-4">
         <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
           <Link2 className="h-4 w-4" />
-          Source References
+          Source Links
         </h3>
 
         <div className="mt-3 grid gap-3">
@@ -352,73 +285,6 @@ function SourceIntelligencePanel({ selectedItem }) {
             </div>
           ))}
         </div>
-      </div>
-    </div>
-  );
-}
-
-function SourceMethodologyPanel() {
-  return (
-    <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-      <SectionTitle
-        icon={Shield}
-        title="Source Reliability Methodology"
-        subtitle="How source-backed entries are graded and explained."
-      />
-
-      <div className="grid gap-4 lg:grid-cols-2">
-        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-          <h3 className="mb-3 flex items-center gap-2 font-semibold text-[#0a2f73]">
-            <FileSearch className="h-4 w-4" />
-            Source Reliability
-          </h3>
-
-          <div className="space-y-3">
-            {sourceMethodology.sourceReliability.map((item) => (
-              <div
-                key={item.rating}
-                className="rounded-xl border border-[#e3e8ef] bg-white p-3"
-              >
-                <p className="font-semibold text-[#0a2f73]">{item.rating}</p>
-                <p className="mt-1 text-sm leading-6 text-slate-600">
-                  {item.meaning}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-          <h3 className="mb-3 flex items-center gap-2 font-semibold text-[#0a2f73]">
-            <Eye className="h-4 w-4" />
-            Information Confidence
-          </h3>
-
-          <div className="space-y-3">
-            {sourceMethodology.informationConfidence.map((item) => (
-              <div
-                key={item.rating}
-                className="rounded-xl border border-[#e3e8ef] bg-white p-3"
-              >
-                <p className="font-semibold text-[#0a2f73]">{item.rating}</p>
-                <p className="mt-1 text-sm leading-6 text-slate-600">
-                  {item.meaning}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-          Public preview status
-        </h3>
-        <p className="mt-2 text-sm leading-6 text-slate-700">
-          In v1.0, indicators include curated public source references, but the
-          tracker remains a public preview. It should not be treated as live
-          intelligence reporting or formal advisory output.
-        </p>
       </div>
     </div>
   );
@@ -753,7 +619,7 @@ function ExecutiveBriefingMode({
                 Validate before formal use
               </p>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Treat the v1.0 indicators as source-backed samples that
+                Treat the v1.1 indicators as source-backed samples that
                 demonstrate structure, not as final intelligence products.
               </p>
             </div>
@@ -819,6 +685,250 @@ function ExecutiveBriefingMode({
   );
 }
 
+function HelpMethodologyMode() {
+  return (
+    <section className="mx-auto max-w-7xl px-5 py-8 md:px-8">
+      <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-8">
+        <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
+          Help & Methodology
+        </div>
+
+        <h2 className="text-3xl font-bold tracking-tight text-[#0a2f73] md:text-4xl">
+          Help, Terminology & Methodology
+        </h2>
+
+        <p className="mt-4 max-w-4xl text-base leading-7 text-slate-700">
+          This section explains how to read the tracker, what the key terms
+          mean, and how the risk and source-confidence layers are structured.
+          It is separated from the main dashboard to keep the first screen
+          cleaner and easier to use.
+        </p>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+          <SectionTitle
+            icon={HelpCircle}
+            title="How to Use This Tracker"
+            subtitle="A quick guide for visitors and decision-makers."
+          />
+
+          <div className="space-y-3">
+            {[
+              "Use Dashboard mode to explore risk indicators, the map, selected indicator briefings, and source links.",
+              "Use Executive Briefing mode for a concise strategic overview of priority risks and planning posture.",
+              "Select any risk card or map marker to update the selected indicator briefing.",
+              "Use Print / Save Briefing to create a printable briefing or save the selected indicator as a PDF.",
+              "Use this Help & Methodology tab to understand terminology, risk levels, source reliability, and public preview limitations.",
+            ].map((item, index) => (
+              <div
+                key={item}
+                className="flex gap-3 rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4 text-sm leading-6 text-slate-700"
+              >
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#eef4ff] text-xs font-bold text-[#0a3d91]">
+                  {index + 1}
+                </span>
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+          <SectionTitle
+            icon={ListChecks}
+            title="Key Terminology"
+            subtitle="Plain-language explanation of the main tracker terms."
+          />
+
+          <div className="grid gap-3 md:grid-cols-2">
+            {[
+              {
+                term: "Risk indicator",
+                meaning:
+                  "A structured signal or theme that may affect strategic planning, operations, resilience, or decision-making.",
+              },
+              {
+                term: "Risk level",
+                meaning:
+                  "A simple classification of the potential strategic significance of the indicator.",
+              },
+              {
+                term: "Trend direction",
+                meaning:
+                  "Whether the indicator appears to be increasing, stable, or decreasing in relevance or intensity.",
+              },
+              {
+                term: "Assessment confidence",
+                meaning:
+                  "How strongly the available information supports the risk assessment.",
+              },
+              {
+                term: "Source reliability",
+                meaning:
+                  "How credible or authoritative the underlying source base is assessed to be.",
+              },
+              {
+                term: "Information confidence",
+                meaning:
+                  "How strongly the available source information supports the indicator assessment.",
+              },
+              {
+                term: "Planning assumption",
+                meaning:
+                  "A structured statement that can be used in scenario planning, continuity planning, or executive review.",
+              },
+              {
+                term: "Public preview",
+                meaning:
+                  "A demonstration version intended to show structure and workflow, not a live intelligence service.",
+              },
+            ].map((item) => (
+              <div
+                key={item.term}
+                className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4"
+              >
+                <p className="font-semibold text-[#0a2f73]">{item.term}</p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  {item.meaning}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+        <SectionTitle
+          icon={BookOpen}
+          title="Risk Methodology"
+          subtitle="How the tracker frames risk level, trend, and confidence."
+        />
+
+        <div className="grid gap-4 lg:grid-cols-3">
+          <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+            <div className="mb-3 flex items-center gap-2 text-[#0a3d91]">
+              <BarChart3 className="h-4 w-4" />
+              <h3 className="font-semibold">Risk Levels</h3>
+            </div>
+
+            <div className="space-y-3">
+              {methodology.riskLevels.map((item) => (
+                <div key={item.level}>
+                  <LevelPill level={item.level} />
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {item.meaning}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+            <div className="mb-3 flex items-center gap-2 text-[#0a3d91]">
+              <TrendingUp className="h-4 w-4" />
+              <h3 className="font-semibold">Trend Direction</h3>
+            </div>
+
+            <div className="space-y-3">
+              {methodology.trends.map((item) => (
+                <div key={item.trend}>
+                  <p className="inline-flex items-center gap-1 rounded-full border border-[#d8dee8] bg-white px-3 py-1 text-xs font-semibold text-slate-700">
+                    <TrendIcon trend={item.trend} /> {item.trend}
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-slate-600">
+                    {item.meaning}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+            <div className="mb-3 flex items-center gap-2 text-[#0a3d91]">
+              <Shield className="h-4 w-4" />
+              <h3 className="font-semibold">Assessment Confidence</h3>
+            </div>
+
+            <p className="text-sm leading-6 text-slate-600">
+              {methodology.confidence}
+            </p>
+
+            <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-slate-700">
+              Current confidence ratings support demonstration and public
+              preview use only. They should not yet be treated as formal
+              intelligence judgements.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+        <SectionTitle
+          icon={Shield}
+          title="Source Reliability Methodology"
+          subtitle="How source-backed entries are graded and explained."
+        />
+
+        <div className="grid gap-4 lg:grid-cols-2">
+          <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+            <h3 className="mb-3 flex items-center gap-2 font-semibold text-[#0a2f73]">
+              <FileSearch className="h-4 w-4" />
+              Source Reliability
+            </h3>
+
+            <div className="space-y-3">
+              {sourceMethodology.sourceReliability.map((item) => (
+                <div
+                  key={item.rating}
+                  className="rounded-xl border border-[#e3e8ef] bg-white p-3"
+                >
+                  <p className="font-semibold text-[#0a2f73]">{item.rating}</p>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">
+                    {item.meaning}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+            <h3 className="mb-3 flex items-center gap-2 font-semibold text-[#0a2f73]">
+              <Eye className="h-4 w-4" />
+              Information Confidence
+            </h3>
+
+            <div className="space-y-3">
+              {sourceMethodology.informationConfidence.map((item) => (
+                <div
+                  key={item.rating}
+                  className="rounded-xl border border-[#e3e8ef] bg-white p-3"
+                >
+                  <p className="font-semibold text-[#0a2f73]">{item.rating}</p>
+                  <p className="mt-1 text-sm leading-6 text-slate-600">
+                    {item.meaning}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
+            Public preview status
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-slate-700">
+            In v1.1, indicators include curated public source references, but
+            the tracker remains a public preview. It should not be treated as
+            live intelligence reporting or formal advisory output.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function PrintableBriefing({ selectedItem, lastUpdated }) {
   const referenceNumber = `CYG-GSRI-${String(selectedItem.id).padStart(
     3,
@@ -854,7 +964,7 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
           <div className="print-meta">
             <div className="print-meta-label">Tracker Version</div>
-            <div className="print-meta-value">v1.0 Public Preview</div>
+            <div className="print-meta-value">v1.1 Public Preview</div>
           </div>
 
           <div className="print-meta">
@@ -1030,7 +1140,7 @@ export default function App() {
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                   <Shield className="h-4 w-4 text-[#0a3d91]" />
-                  Tracker v1.0 · Public Preview Release
+                  Tracker v1.1 · Help &amp; Methodology Tab
                 </div>
 
                 <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -1067,7 +1177,7 @@ export default function App() {
                     Print / Save Briefing
                   </button>
 
-                  <div className="flex rounded-full border border-[#d8dee8] bg-white p-1 shadow-sm">
+                  <div className="flex flex-wrap rounded-3xl border border-[#d8dee8] bg-white p-1 shadow-sm">
                     <button
                       onClick={() => setViewMode("dashboard")}
                       className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
@@ -1088,6 +1198,17 @@ export default function App() {
                       }`}
                     >
                       Executive Briefing
+                    </button>
+
+                    <button
+                      onClick={() => setViewMode("help")}
+                      className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+                        viewMode === "help"
+                          ? "bg-[#0a3d91] text-white"
+                          : "text-slate-600 hover:bg-[#f8fafc]"
+                      }`}
+                    >
+                      Help & Methodology
                     </button>
                   </div>
                 </div>
@@ -1138,13 +1259,12 @@ export default function App() {
 
                 <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.0 public preview
+                    v1.1 usability update
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    This release stabilises the first public preview of the
-                    tracker, using source-backed sample indicators to demonstrate
-                    the Cygnus risk intelligence framework, briefing workflow,
-                    and source credibility model.
+                    This release moves deeper methodology and terminology
+                    explanations into a dedicated Help & Methodology tab,
+                    keeping the dashboard cleaner and easier to use.
                   </p>
                 </div>
               </div>
@@ -1157,7 +1277,7 @@ export default function App() {
             <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
               <div>
                 <p className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-                  v1.0 public preview
+                  v1.1 public preview
                 </p>
                 <p className="mt-2 text-sm leading-6 text-slate-700">
                   This tracker is a public preview of the Cygnus strategic risk
@@ -1170,7 +1290,7 @@ export default function App() {
               </div>
 
               <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-semibold text-[#0a2f73]">
-                Version 1.0
+                Version 1.1
               </div>
             </div>
           </div>
@@ -1183,6 +1303,8 @@ export default function App() {
             setSelectedItem={setSelectedItem}
             onPrintBriefing={handlePrintBriefing}
           />
+        ) : viewMode === "help" ? (
+          <HelpMethodologyMode />
         ) : (
           <section className="mx-auto max-w-7xl px-5 py-8 md:px-8">
             <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
@@ -1361,14 +1483,6 @@ export default function App() {
               <SourceIntelligencePanel selectedItem={selectedItem} />
             </div>
 
-            <div className="mt-6">
-              <MethodologyPanel />
-            </div>
-
-            <div className="mt-6">
-              <SourceMethodologyPanel />
-            </div>
-
             <div className="mt-6 grid gap-6 lg:grid-cols-3">
               <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
                 <SectionTitle
@@ -1396,27 +1510,29 @@ export default function App() {
                 <SectionTitle
                   icon={Database}
                   title="Data Structure"
-                  subtitle="v1.0 supports source-backed sample indicators, dashboard, executive briefing, and public preview workflows."
+                  subtitle="v1.1 keeps the main dashboard focused while moving explanations into Help."
                 />
 
                 <div className="space-y-3">
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Source-backed sample data
+                      Cleaner dashboard
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Indicators include curated public source references to
-                      demonstrate how future validated entries can be structured.
+                      The main dashboard now focuses on risk exploration,
+                      selected indicator detail, source links, and briefing
+                      output.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Dashboard and executive modes
+                      Help & methodology tab
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Users can explore the full tracker or switch to a concise
-                      executive briefing view.
+                      Terminology, risk methodology, source reliability, and
+                      information confidence explanations are now grouped in one
+                      dedicated area.
                     </p>
                   </div>
 
@@ -1491,7 +1607,7 @@ export default function App() {
               <div className="text-left md:text-right">
                 <p>Cygnus Global Strategic Risk Intelligence Tracker</p>
                 <p className="mt-1 text-xs">
-                  v1.0 public preview · Source-backed sample indicators
+                  v1.1 public preview · Help & methodology tab
                 </p>
               </div>
             </div>
