@@ -163,7 +163,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v0.8
+        Interactive global map · v0.9
       </div>
     </div>
   );
@@ -290,8 +290,8 @@ function SourceIntelligencePanel({ selectedItem }) {
           </p>
 
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            The current tracker still uses sample data, but this structure
-            prepares it for future source-backed entries.
+            The current tracker uses source-backed sample indicators and remains
+            a public preview.
           </p>
         </div>
       </div>
@@ -362,7 +362,7 @@ function SourceMethodologyPanel() {
       <SectionTitle
         icon={Shield}
         title="Source Reliability Methodology"
-        subtitle="How future source-backed entries can be graded and explained."
+        subtitle="How source-backed entries are graded and explained."
       />
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -411,12 +411,12 @@ function SourceMethodologyPanel() {
 
       <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-          Prototype status
+          Public preview status
         </h3>
         <p className="mt-2 text-sm leading-6 text-slate-700">
-          In v0.8, all current source fields are structural placeholders. They
-          demonstrate how the tracker can later present curated, source-backed
-          risk indicators without yet claiming live intelligence validation.
+          In v0.9, indicators include curated public source references, but the
+          tracker remains a public preview. It should not be treated as live
+          intelligence reporting or formal advisory output.
         </p>
       </div>
     </div>
@@ -710,9 +710,9 @@ function ExecutiveBriefingMode({
                 Source confidence remains prototype-level
               </h3>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Current entries remain illustrative. The source credibility
-                framework is now in place for future validated source-backed
-                assessments.
+                Current entries are now source-backed samples. They still
+                require validation before being treated as formal intelligence
+                reporting.
               </p>
             </div>
           </div>
@@ -750,11 +750,11 @@ function ExecutiveBriefingMode({
 
             <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
               <p className="font-semibold text-[#0a2f73]">
-                Prioritise resilience testing
+                Validate before formal use
               </p>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Test exposure to supplier disruption, cyber interruption,
-                logistics pressure, and regulatory change.
+                Treat the v0.9 indicators as source-backed samples that
+                demonstrate structure, not as finalized intelligence products.
               </p>
             </div>
           </div>
@@ -811,8 +811,8 @@ function ExecutiveBriefingMode({
         </h3>
         <p className="mt-2 text-sm leading-6 text-slate-700">
           This executive view is designed to summarise the tracker for quick
-          interpretation. Current risk entries remain illustrative prototype
-          content and should not be treated as validated intelligence reporting.
+          interpretation. Current risk entries are source-backed samples and
+          should not be treated as validated intelligence reporting.
         </p>
       </div>
     </section>
@@ -854,7 +854,7 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
           <div className="print-meta">
             <div className="print-meta-label">Tracker Version</div>
-            <div className="print-meta-value">v0.8 Public Preview</div>
+            <div className="print-meta-value">v0.9 Public Preview</div>
           </div>
 
           <div className="print-meta">
@@ -954,11 +954,11 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
         <div className="print-disclaimer">
           <strong>Disclaimer:</strong> This briefing is generated from the
           Cygnus Global Strategic Risk Intelligence Tracker public preview.
-          Current content uses illustrative/sample risk indicators and source
-          placeholders. It is intended to support strategic awareness, scenario
-          thinking, and decision support. It should not be treated as official
-          intelligence, legal advice, financial advice, or a substitute for
-          professional judgement.
+          Current content uses source-backed sample risk indicators and should
+          not be treated as live intelligence reporting. It is intended to
+          support strategic awareness, scenario thinking, and decision support.
+          It should not be treated as official intelligence, legal advice,
+          financial advice, or a substitute for professional judgement.
         </div>
       </div>
     </div>
@@ -1030,7 +1030,7 @@ export default function App() {
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                   <Shield className="h-4 w-4 text-[#0a3d91]" />
-                  Tracker v0.8 · Public Preview &amp; Polish
+                  Tracker v0.9 · Source-Backed Sample Indicators
                 </div>
 
                 <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -1130,19 +1130,19 @@ export default function App() {
                       Status
                     </p>
                     <p className="mt-1 text-lg font-semibold text-[#0a2f73]">
-                      Prototype data
+                      Public preview
                     </p>
                   </div>
                 </div>
 
                 <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v0.8 enhancement
+                    v0.9 enhancement
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    This version improves mobile display, print formatting,
-                    public preview clarity, and overall presentation polish while
-                    retaining the full dashboard and executive briefing workflow.
+                    This version introduces source-backed sample indicators
+                    using curated public reports while retaining the public
+                    preview disclaimer and prototype status.
                   </p>
                 </div>
               </div>
@@ -1159,7 +1159,7 @@ export default function App() {
                 </p>
                 <p className="mt-2 text-sm leading-6 text-slate-700">
                   This tracker is currently a public-facing prototype using
-                  illustrative sample indicators. It demonstrates the Cygnus
+                  source-backed sample indicators. It demonstrates the Cygnus
                   risk intelligence structure, dashboard workflow, briefing
                   layer, and source credibility model. It should not yet be
                   treated as live intelligence reporting.
@@ -1167,7 +1167,7 @@ export default function App() {
               </div>
 
               <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-semibold text-[#0a2f73]">
-                Version 0.8
+                Version 0.9
               </div>
             </div>
           </div>
@@ -1393,27 +1393,27 @@ export default function App() {
                 <SectionTitle
                   icon={Database}
                   title="Data Structure"
-                  subtitle="v0.8 supports dashboard, executive briefing, and public preview workflows."
+                  subtitle="v0.9 supports source-backed sample indicators, dashboard, executive briefing, and public preview workflows."
                 />
 
                 <div className="space-y-3">
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Dashboard mode
+                      Source-backed sample data
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      The full tracker remains available for deeper exploration,
-                      map interaction, methodology review, and source structure.
+                      Indicators now include curated public source references to
+                      demonstrate how future validated entries can be structured.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Executive briefing mode
+                      Dashboard and executive modes
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Visitors can switch to a cleaner executive summary view
-                      focused on priority risk indicators and strategic themes.
+                      Users can explore the full tracker or switch to a concise
+                      executive briefing view.
                     </p>
                   </div>
 
@@ -1450,10 +1450,10 @@ export default function App() {
                     Sources & Disclaimer
                   </h3>
                   <p className="mt-2 text-sm leading-6 text-slate-700">
-                    This tracker currently uses sample data and illustrative risk
-                    indicators. Source references and reliability fields are
-                    structural placeholders for future source-backed entries. The
-                    tracker is intended to support strategic awareness, scenario
+                    This tracker currently uses source-backed sample indicators.
+                    Source references and reliability fields demonstrate the
+                    intended structure for future validated entries. The tracker
+                    is intended to support strategic awareness, scenario
                     thinking, and decision support. It should not be treated as
                     official intelligence, legal advice, financial advice, or a
                     substitute for professional judgement.
@@ -1488,7 +1488,7 @@ export default function App() {
               <div className="text-left md:text-right">
                 <p>Cygnus Global Strategic Risk Intelligence Tracker</p>
                 <p className="mt-1 text-xs">
-                  v0.8 public preview · Illustrative prototype data
+                  v0.9 public preview · Source-backed sample indicators
                 </p>
               </div>
             </div>
