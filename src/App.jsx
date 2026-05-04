@@ -25,6 +25,10 @@ import {
   Download,
   HelpCircle,
   ListChecks,
+  ClipboardList,
+  Signal,
+  SearchCheck,
+  NotebookText,
 } from "lucide-react";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -37,6 +41,7 @@ import {
   lastUpdated,
   methodology,
   sourceMethodology,
+  dataCurationMethodology,
 } from "./riskData";
 
 const levelStyles = {
@@ -172,6 +177,8 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
                 <br />
                 <span>Confidence: {item.confidence}</span>
                 <br />
+                <span>Review priority: {item.reviewPriority}</span>
+                <br />
                 <span>Source: {item.sourceReliability}</span>
               </div>
             </Popup>
@@ -180,7 +187,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v1.2 Public Preview
+        Interactive global map · v1.3 Public Preview
       </div>
     </div>
   );
@@ -195,7 +202,7 @@ function SourceIntelligencePanel({ selectedItem }) {
         subtitle="Selected source-backed sample references for the current indicator."
       />
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-4">
         <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
           <div className="flex items-center gap-2 text-[#0a3d91]">
             <Shield className="h-4 w-4" />
@@ -207,8 +214,8 @@ function SourceIntelligencePanel({ selectedItem }) {
           </p>
 
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            This indicates the assessed reliability of the source base
-            supporting the selected indicator.
+            Assessed reliability of the source base supporting the selected
+            indicator.
           </p>
         </div>
 
@@ -223,8 +230,24 @@ function SourceIntelligencePanel({ selectedItem }) {
           </p>
 
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            This reflects how strongly the available information supports the
-            current assessment.
+            How strongly the available information supports the current
+            assessment.
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <div className="flex items-center gap-2 text-[#0a3d91]">
+            <SearchCheck className="h-4 w-4" />
+            <h3 className="font-semibold">Review Priority</h3>
+          </div>
+
+          <p className="mt-3 text-2xl font-bold text-[#0a2f73]">
+            {selectedItem.reviewPriority}
+          </p>
+
+          <p className="mt-2 text-sm leading-6 text-slate-600">
+            Indicates how important it is to refresh or validate before formal
+            use.
           </p>
         </div>
 
@@ -239,8 +262,7 @@ function SourceIntelligencePanel({ selectedItem }) {
           </p>
 
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            The current tracker uses source-backed sample indicators and remains
-            a public preview.
+            Source-backed sample indicator for public preview use.
           </p>
         </div>
       </div>
@@ -305,6 +327,96 @@ function SourceIntelligencePanel({ selectedItem }) {
   );
 }
 
+function DataCurationPanel({ selectedItem }) {
+  return (
+    <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+      <SectionTitle
+        icon={ClipboardList}
+        title="Data Curation Layer"
+        subtitle="Curated data points, monitoring signals, intelligence gaps, and analyst interpretation for the selected indicator."
+      />
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
+            <Database className="h-4 w-4" />
+            Curated Data Points
+          </h3>
+
+          <ul className="mt-3 space-y-2">
+            {selectedItem.curatedDataPoints.map((point) => (
+              <li
+                key={point}
+                className="rounded-xl border border-[#e3e8ef] bg-white p-3 text-sm leading-6 text-slate-700"
+              >
+                {point}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
+            <Signal className="h-4 w-4" />
+            Monitoring Signals
+          </h3>
+
+          <ul className="mt-3 space-y-2">
+            {selectedItem.monitoringSignals.map((signal) => (
+              <li
+                key={signal}
+                className="rounded-xl border border-[#e3e8ef] bg-white p-3 text-sm leading-6 text-slate-700"
+              >
+                {signal}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
+            <SearchCheck className="h-4 w-4" />
+            Intelligence Gaps
+          </h3>
+
+          <ul className="mt-3 space-y-2">
+            {selectedItem.intelligenceGaps.map((gap) => (
+              <li
+                key={gap}
+                className="rounded-xl border border-[#e3e8ef] bg-white p-3 text-sm leading-6 text-slate-700"
+              >
+                {gap}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-[#e3e8ef] bg-white p-4">
+          <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
+            <NotebookText className="h-4 w-4" />
+            Analyst Note
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-slate-700">
+            {selectedItem.analystNote}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-white p-4">
+          <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
+            <Shield className="h-4 w-4" />
+            Source Quality Note
+          </h3>
+          <p className="mt-2 text-sm leading-6 text-slate-700">
+            {selectedItem.sourceQualityNote}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SelectedBriefing({ selectedItem, onPrintBriefing }) {
   return (
     <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
@@ -328,6 +440,7 @@ function SelectedBriefing({ selectedItem, onPrintBriefing }) {
         <LevelPill level={selectedItem.level} />
         <MetadataPill>Confidence: {selectedItem.confidence}</MetadataPill>
         <MetadataPill>Trend: {selectedItem.trend}</MetadataPill>
+        <MetadataPill>Review: {selectedItem.reviewPriority}</MetadataPill>
         <MetadataPill>Updated: {selectedItem.lastUpdated}</MetadataPill>
         <MetadataPill>Source: {selectedItem.sourceReliability}</MetadataPill>
       </div>
@@ -380,7 +493,7 @@ function SelectedBriefing({ selectedItem, onPrintBriefing }) {
         </ul>
       </div>
 
-      <div className="mt-4 grid gap-4 md:grid-cols-4">
+      <div className="mt-4 grid gap-4 md:grid-cols-5">
         <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
           <p className="text-xs uppercase tracking-wide text-slate-500">
             Source type
@@ -405,6 +518,15 @@ function SelectedBriefing({ selectedItem, onPrintBriefing }) {
           </p>
           <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
             {selectedItem.informationConfidence}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <p className="text-xs uppercase tracking-wide text-slate-500">
+            Review priority
+          </p>
+          <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+            {selectedItem.reviewPriority}
           </p>
         </div>
 
@@ -440,6 +562,9 @@ function ExecutiveBriefingMode({
   const increasingItems = riskItems.filter(
     (item) => item.trend === "Increasing"
   );
+  const highReviewItems = riskItems.filter(
+    (item) => item.reviewPriority === "High"
+  );
 
   return (
     <section className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8">
@@ -455,9 +580,9 @@ function ExecutiveBriefingMode({
             </h2>
 
             <p className="mt-4 max-w-3xl text-base leading-7 text-slate-700">
-              This briefing view converts the tracker into a concise executive
-              overview, highlighting priority risks, strategic themes, planning
-              assumptions, and selected indicator detail.
+              This briefing view summarises priority risks, review priorities,
+              strategic themes, planning assumptions, and selected indicator
+              detail.
             </p>
           </div>
 
@@ -491,18 +616,20 @@ function ExecutiveBriefingMode({
 
           <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
             <p className="text-xs uppercase tracking-wide text-[#b8862b]">
-              Increasing trend
+              High review priority
             </p>
             <p className="mt-2 text-3xl font-bold text-[#b8862b]">
-              {increasingItems.length}
+              {highReviewItems.length}
             </p>
           </div>
 
           <div className="rounded-2xl border border-[#d8dee8] bg-white p-4">
             <p className="text-xs uppercase tracking-wide text-slate-500">
-              Current posture
+              Increasing trend
             </p>
-            <p className="mt-2 text-xl font-bold text-[#0a2f73]">Elevated</p>
+            <p className="mt-2 text-3xl font-bold text-[#0a2f73]">
+              {increasingItems.length}
+            </p>
           </div>
         </div>
       </div>
@@ -539,7 +666,7 @@ function ExecutiveBriefingMode({
                       <div className="flex flex-wrap items-center gap-2">
                         <LevelPill level={item.level} />
                         <MetadataPill>{item.trend}</MetadataPill>
-                        <MetadataPill>{item.category}</MetadataPill>
+                        <MetadataPill>Review: {item.reviewPriority}</MetadataPill>
                       </div>
 
                       <h3 className="mt-3 font-semibold text-[#0a2f73]">
@@ -561,29 +688,27 @@ function ExecutiveBriefingMode({
           <SectionTitle
             icon={TrendingUp}
             title="Strategic Themes"
-            subtitle="Cross-cutting themes emerging from the current source-backed samples."
+            subtitle="Cross-cutting themes emerging from the current curated samples."
           />
 
           <div className="space-y-3">
             <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
               <h3 className="font-semibold text-[#0a2f73]">
-                Volatility is multi-domain
+                Monitoring value has increased
               </h3>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Strategic risk is not isolated to one category. Geopolitical,
-                cyber, logistics, climate, and regulatory pressures can interact
-                and amplify one another.
+                v1.3 adds monitoring signals for each indicator, making the
+                tracker more useful as a planning and review tool.
               </p>
             </div>
 
             <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
               <h3 className="font-semibold text-[#0a2f73]">
-                Resilience assumptions matter
+                Intelligence gaps remain visible
               </h3>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Organisations should test assumptions around continuity,
-                suppliers, infrastructure, cyber resilience, and escalation
-                timelines.
+                Intelligence gaps show what still needs to be validated before a
+                sample indicator could become formal intelligence output.
               </p>
             </div>
 
@@ -592,8 +717,8 @@ function ExecutiveBriefingMode({
                 Source confidence remains preview-level
               </h3>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Current entries are source-backed samples. They still require
-                validation before being treated as formal intelligence reporting.
+                Current entries are source-backed and curated, but still require
+                validation before formal client-facing use.
               </p>
             </div>
           </div>
@@ -611,31 +736,31 @@ function ExecutiveBriefingMode({
           <div className="space-y-3">
             <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
               <p className="font-semibold text-[#0a2f73]">
-                Maintain active monitoring
+                Prioritise high-review indicators
               </p>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Monitor high-risk and increasing-trend indicators for changes in
-                severity, speed, and cross-domain impact.
+                High review priority indicators should be refreshed first before
+                operational or client-facing use.
               </p>
             </div>
 
             <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
               <p className="font-semibold text-[#0a2f73]">
-                Build scenario assumptions
+                Track monitoring signals
               </p>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Convert selected indicators into planning assumptions for
-                scenario development, continuity planning, and executive review.
+                Use monitoring signals to decide what developments should trigger
+                a scenario refresh or leadership review.
               </p>
             </div>
 
             <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
               <p className="font-semibold text-[#0a2f73]">
-                Validate before formal use
+                Close intelligence gaps
               </p>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Treat the v1.2 indicators as source-backed samples that
-                demonstrate structure, not as final intelligence products.
+                Treat intelligence gaps as the next research requirements before
+                moving from public preview to formal analysis.
               </p>
             </div>
           </div>
@@ -653,6 +778,7 @@ function ExecutiveBriefingMode({
             <MetadataPill>{selectedItem.category}</MetadataPill>
             <MetadataPill>Trend: {selectedItem.trend}</MetadataPill>
             <MetadataPill>Confidence: {selectedItem.confidence}</MetadataPill>
+            <MetadataPill>Review: {selectedItem.reviewPriority}</MetadataPill>
           </div>
 
           <h3 className="mt-4 text-xl font-semibold text-[#0a2f73]">
@@ -685,17 +811,6 @@ function ExecutiveBriefingMode({
           </button>
         </div>
       </div>
-
-      <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-50 p-5 shadow-sm md:p-6">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-          Executive briefing note
-        </h3>
-        <p className="mt-2 text-sm leading-6 text-slate-700">
-          This executive view summarises the tracker for quick interpretation.
-          Current risk entries are source-backed samples and should not be
-          treated as validated intelligence reporting.
-        </p>
-      </div>
     </section>
   );
 }
@@ -714,9 +829,8 @@ function HelpMethodologyMode() {
 
         <p className="mt-4 max-w-4xl text-base leading-7 text-slate-700">
           This section explains how to read the tracker, what the key terms
-          mean, and how the risk and source-confidence layers are structured.
-          It is separated from the main dashboard to keep the first screen
-          cleaner and easier to use.
+          mean, how the risk and source-confidence layers are structured, and
+          how the v1.3 data curation fields should be interpreted.
         </p>
       </div>
 
@@ -730,11 +844,11 @@ function HelpMethodologyMode() {
 
           <div className="space-y-3">
             {[
-              "Use Dashboard mode to explore risk indicators, the map, selected indicator briefings, and source links.",
+              "Use Dashboard mode to explore risk indicators, the map, selected indicator briefings, source links, and data curation fields.",
               "Use Executive Briefing mode for a concise strategic overview of priority risks and planning posture.",
               "Select any risk card or map marker to update the selected indicator briefing.",
               "Use Print / Save Briefing to create a printable briefing or save the selected indicator as a PDF.",
-              "Use this Help & Methodology tab to understand terminology, risk levels, source reliability, and public preview limitations.",
+              "Use the data curation layer to review monitoring signals, intelligence gaps, analyst notes and source quality notes.",
             ].map((item, index) => (
               <div
                 key={item}
@@ -764,34 +878,34 @@ function HelpMethodologyMode() {
                   "A structured signal or theme that may affect strategic planning, operations, resilience, or decision-making.",
               },
               {
-                term: "Risk level",
+                term: "Review priority",
                 meaning:
-                  "A simple classification of the potential strategic significance of the indicator.",
+                  "How important it is to refresh, validate, or deepen the indicator before formal use.",
               },
               {
-                term: "Trend direction",
+                term: "Curated data points",
                 meaning:
-                  "Whether the indicator appears to be increasing, stable, or decreasing in relevance or intensity.",
+                  "Selected source-backed observations that support the indicator theme.",
               },
               {
-                term: "Assessment confidence",
+                term: "Monitoring signals",
                 meaning:
-                  "How strongly the available information supports the risk assessment.",
+                  "Developments that should be watched because they may change the assessment.",
               },
               {
-                term: "Source reliability",
+                term: "Intelligence gaps",
                 meaning:
-                  "How credible or authoritative the underlying source base is assessed to be.",
+                  "Information still needed before the indicator can be treated as a formal intelligence product.",
               },
               {
-                term: "Information confidence",
+                term: "Analyst note",
                 meaning:
-                  "How strongly the available source information supports the indicator assessment.",
+                  "Plain-language interpretation of how the indicator should be used in the public preview.",
               },
               {
-                term: "Planning assumption",
+                term: "Source quality note",
                 meaning:
-                  "A structured statement that can be used in scenario planning, continuity planning, or executive review.",
+                  "A caution or explanation about the strengths and limits of the source base.",
               },
               {
                 term: "Public preview",
@@ -810,6 +924,32 @@ function HelpMethodologyMode() {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+        <SectionTitle
+          icon={ClipboardList}
+          title="Data Curation Methodology"
+          subtitle="How the enhanced v1.3 source and data fields should be interpreted."
+        />
+
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {[
+            ["Curated Data Points", dataCurationMethodology.curatedDataPoints],
+            ["Monitoring Signals", dataCurationMethodology.monitoringSignals],
+            ["Intelligence Gaps", dataCurationMethodology.intelligenceGaps],
+            ["Analyst Note", dataCurationMethodology.analystNote],
+            ["Review Priority", dataCurationMethodology.reviewPriority],
+          ].map(([title, text]) => (
+            <div
+              key={title}
+              className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4"
+            >
+              <p className="font-semibold text-[#0a2f73]">{title}</p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">{text}</p>
+            </div>
+          ))}
         </div>
       </div>
 
@@ -934,9 +1074,10 @@ function HelpMethodologyMode() {
             Public preview status
           </h3>
           <p className="mt-2 text-sm leading-6 text-slate-700">
-            In v1.2, indicators include curated public source references, but
-            the tracker remains a public preview. It should not be treated as
-            live intelligence reporting or formal advisory output.
+            In v1.3, indicators include curated public source references and
+            enhanced data curation fields, but the tracker remains a public
+            preview. It should not be treated as live intelligence reporting or
+            formal advisory output.
           </p>
         </div>
       </div>
@@ -979,7 +1120,7 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
           <div className="print-meta">
             <div className="print-meta-label">Tracker Version</div>
-            <div className="print-meta-value">v1.2 Public Preview</div>
+            <div className="print-meta-value">v1.3 Public Preview</div>
           </div>
 
           <div className="print-meta">
@@ -1013,8 +1154,10 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
           </div>
 
           <div className="print-meta">
-            <div className="print-meta-label">Assessment Confidence</div>
-            <div className="print-meta-value">{selectedItem.confidence}</div>
+            <div className="print-meta-label">Review Priority</div>
+            <div className="print-meta-value">
+              {selectedItem.reviewPriority}
+            </div>
           </div>
         </div>
 
@@ -1035,6 +1178,38 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
         <div className="print-section">
           <h2>Planning Assumption</h2>
           <p>{selectedItem.assumption}</p>
+        </div>
+
+        <div className="print-section">
+          <h2>Curated Data Points</h2>
+          <ul>
+            {selectedItem.curatedDataPoints.map((point) => (
+              <li key={point}>{point}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="print-section">
+          <h2>Monitoring Signals</h2>
+          <ul>
+            {selectedItem.monitoringSignals.map((signal) => (
+              <li key={signal}>{signal}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="print-section">
+          <h2>Intelligence Gaps</h2>
+          <ul>
+            {selectedItem.intelligenceGaps.map((gap) => (
+              <li key={gap}>{gap}</li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="print-section">
+          <h2>Analyst Note</h2>
+          <p>{selectedItem.analystNote}</p>
         </div>
 
         <div className="print-section">
@@ -1155,7 +1330,7 @@ export default function App() {
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                   <Shield className="h-4 w-4 text-[#0a3d91]" />
-                  Tracker v1.2 · Mobile Polish &amp; Cleaner Landing Intro
+                  Tracker v1.3 · Enhanced Source &amp; Data Curation
                 </div>
 
                 <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -1168,39 +1343,38 @@ export default function App() {
 
                 <p className="mt-5 max-w-3xl text-base leading-7 text-slate-700 md:text-lg">
                   A public preview of the Cygnus strategic risk intelligence
-                  framework — designed to turn global risk themes, source
-                  credibility, scenario watchpoints, and planning assumptions
-                  into a practical decision-support dashboard.
+                  framework — now with enhanced curated data points, monitoring
+                  signals, intelligence gaps, analyst notes, and source quality
+                  notes.
                 </p>
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-3">
                   <div className="rounded-2xl border border-[#d8dee8] bg-white/95 p-4 shadow-sm">
                     <p className="font-semibold text-[#0a2f73]">
-                      Explore risks
+                      Curate source data
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Review source-backed sample indicators and selected
-                      briefing detail.
+                      Review selected source-backed observations and analyst
+                      notes.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#d8dee8] bg-white/95 p-4 shadow-sm">
                     <p className="font-semibold text-[#0a2f73]">
-                      Brief clearly
+                      Monitor signals
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Switch to executive mode or print a selected risk
-                      briefing.
+                      Identify developments that may trigger review or scenario
+                      refresh.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#d8dee8] bg-white/95 p-4 shadow-sm">
                     <p className="font-semibold text-[#0a2f73]">
-                      Understand confidence
+                      Expose gaps
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Use the help tab to understand terminology and source
-                      credibility.
+                      Keep intelligence gaps visible before formal use.
                     </p>
                   </div>
                 </div>
@@ -1256,10 +1430,9 @@ export default function App() {
                 </div>
 
                 <p className="mt-4 text-sm leading-6 text-slate-700">
-                  Current public preview indicators suggest a continuing
-                  requirement for active monitoring, scenario planning, and
-                  robust contingency assumptions across geopolitical, economic,
-                  cyber, supply chain, climate, and regulatory domains.
+                  v1.3 strengthens the source-backed sample layer by showing
+                  what was curated, what should be monitored, and what still
+                  needs validation before formal intelligence use.
                 </p>
 
                 <div className="mt-5 grid grid-cols-2 gap-3">
@@ -1284,12 +1457,11 @@ export default function App() {
 
                 <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.2 usability update
+                    v1.3 data curation update
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    This release improves the first-screen landing experience and
-                    mobile usability while keeping the dashboard, executive
-                    briefing, help tab, and print workflow intact.
+                    This release improves the curated source layer while keeping
+                    the tracker static, stable, and suitable for Vercel hosting.
                   </p>
                 </div>
               </div>
@@ -1299,18 +1471,19 @@ export default function App() {
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.2 public preview
+                    v1.3 public preview
                   </p>
                   <p className="mt-2 text-sm leading-6 text-slate-700">
-                    This tracker uses source-backed sample indicators to
-                    demonstrate the Cygnus risk intelligence framework. It
-                    should not yet be treated as live intelligence reporting,
-                    formal advisory output, legal advice, or financial advice.
+                    This tracker uses source-backed sample indicators and
+                    enhanced curation fields to demonstrate the Cygnus risk
+                    intelligence framework. It should not yet be treated as live
+                    intelligence reporting, formal advisory output, legal
+                    advice, or financial advice.
                   </p>
                 </div>
 
                 <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-semibold text-[#0a2f73]">
-                  Version 1.2
+                  Version 1.3
                 </div>
               </div>
             </div>
@@ -1427,8 +1600,13 @@ export default function App() {
                           </span>
                         </div>
 
-                        <div className="mt-3 rounded-xl border border-[#e3e8ef] bg-[#f8fafc] px-3 py-2 text-xs text-slate-600">
-                          Source: {item.sourceReliability}
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <span className="rounded-xl border border-[#e3e8ef] bg-[#f8fafc] px-3 py-2 text-xs text-slate-600">
+                            Source: {item.sourceReliability}
+                          </span>
+                          <span className="rounded-xl border border-[#e3e8ef] bg-[#f8fafc] px-3 py-2 text-xs text-slate-600">
+                            Review: {item.reviewPriority}
+                          </span>
                         </div>
                       </button>
                     );
@@ -1476,6 +1654,9 @@ export default function App() {
                       Confidence: {selectedItem.confidence}
                     </MetadataPill>
                     <MetadataPill>Trend: {selectedItem.trend}</MetadataPill>
+                    <MetadataPill>
+                      Review: {selectedItem.reviewPriority}
+                    </MetadataPill>
                   </div>
 
                   <h3 className="mt-4 text-lg font-semibold text-[#0a2f73]">
@@ -1507,6 +1688,15 @@ export default function App() {
 
                     <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
                       <p className="text-xs uppercase tracking-wide text-slate-500">
+                        Review priority
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                        {selectedItem.reviewPriority}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">
                         Assessment status
                       </p>
                       <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
@@ -1523,6 +1713,10 @@ export default function App() {
                 selectedItem={selectedItem}
                 onPrintBriefing={handlePrintBriefing}
               />
+            </div>
+
+            <div className="mt-6">
+              <DataCurationPanel selectedItem={selectedItem} />
             </div>
 
             <div className="mt-6">
@@ -1556,37 +1750,38 @@ export default function App() {
                 <SectionTitle
                   icon={Database}
                   title="Data Structure"
-                  subtitle="v1.2 improves first-screen usability and mobile presentation."
+                  subtitle="v1.3 strengthens the curated source and data layer."
                 />
 
                 <div className="space-y-3">
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Cleaner landing intro
+                      Enhanced curation
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      The top of the tracker now acts as a clearer front door
-                      into the dashboard, executive briefing, and help sections.
+                      Each indicator now includes curated data points,
+                      monitoring signals, intelligence gaps, analyst notes and
+                      source quality notes.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Mobile polish
+                      Review priority
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Navigation, button spacing, map height, and card layouts
-                      have been improved for smaller screens.
+                      Review priority helps identify which indicators should be
+                      refreshed or validated first.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Print-ready briefing
+                      Future live-data path
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      The selected indicator can be printed or saved as a PDF
-                      using the browser print dialog.
+                      This static curation layer prepares the tracker for later,
+                      carefully controlled live-data panels.
                     </p>
                   </div>
                 </div>
@@ -1651,7 +1846,7 @@ export default function App() {
               <div className="text-left md:text-right">
                 <p>Cygnus Global Strategic Risk Intelligence Tracker</p>
                 <p className="mt-1 text-xs">
-                  v1.2 public preview · Mobile polish & cleaner landing intro
+                  v1.3 public preview · Enhanced source and data curation
                 </p>
               </div>
             </div>

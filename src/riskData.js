@@ -16,7 +16,7 @@ const sourceBackedMetadata = {
   sourceType: "Curated open-source reporting",
   assessmentStatus: "Source-backed sample assessment",
   confidenceNote:
-    "Confidence reflects whether the cited public sources support the indicator theme. This remains a prototype assessment and should not be treated as validated intelligence reporting.",
+    "Confidence reflects whether the cited public sources support the indicator theme. This remains a public preview assessment and should not be treated as validated intelligence reporting.",
 };
 
 export const riskItems = [
@@ -28,6 +28,7 @@ export const riskItems = [
     level: "High",
     trend: "Increasing",
     confidence: "Medium",
+    reviewPriority: "High",
     summary:
       "Global risk conditions remain shaped by geopolitical shocks, strategic competition, rapid technological change, climate instability, and social strain.",
     implications: [
@@ -44,6 +45,25 @@ export const riskItems = [
     informationConfidence: "Medium",
     sourceSummary:
       "The World Economic Forum's Global Risks Report 2026 frames global risk across near-, medium-, and longer-term timeframes and highlights turbulence spanning geopolitical shocks, technology change, climate instability, and societal stress.",
+    curatedDataPoints: [
+      "WEF Global Risks Report 2026 analyses global risks across multiple timeframes.",
+      "The source supports a broad multi-domain strategic risk framing rather than a single-country assessment.",
+      "This indicator is best treated as a strategic context indicator for scenario planning.",
+    ],
+    monitoringSignals: [
+      "New or expanded sanctions packages",
+      "Military escalation around major geopolitical fault lines",
+      "Sharp diplomatic deterioration between major powers",
+      "Trade restrictions linked to national security concerns",
+    ],
+    intelligenceGaps: [
+      "Requires region-specific validation before use in client-facing intelligence products.",
+      "Requires monitoring of current diplomatic, military, trade, and sanctions developments.",
+    ],
+    analystNote:
+      "This is a high-level strategic context indicator. It is useful for framing global uncertainty but should be supported by region-specific analysis before formal use.",
+    sourceQualityNote:
+      "WEF is a credible global risk framing source, but its reporting is perception- and expert-survey-informed rather than a live intelligence feed.",
     sourceReferences: [
       {
         label: "World Economic Forum - Global Risks Report 2026",
@@ -68,6 +88,7 @@ export const riskItems = [
     level: "Medium",
     trend: "Stable",
     confidence: "Medium",
+    reviewPriority: "Medium",
     summary:
       "The global economy remains exposed to slower growth, inflation uncertainty, commodity-price shocks, and second-order effects from geopolitical disruption.",
     implications: [
@@ -84,6 +105,26 @@ export const riskItems = [
     informationConfidence: "Medium",
     sourceSummary:
       "The IMF April 2026 World Economic Outlook projects slower global growth and notes that global headline inflation is expected to rise modestly in 2026 before declining in 2027, with risk linked to geopolitical conflict and commodity-price channels.",
+    curatedDataPoints: [
+      "IMF April 2026 WEO projects global growth slowing to 3.1% in 2026 and 3.2% in 2027 under its stated assumptions.",
+      "The IMF notes global headline inflation is projected to rise modestly in 2026 before declining in 2027.",
+      "The macroeconomic risk context is linked to conflict duration, commodity-price channels, and uncertainty.",
+    ],
+    monitoringSignals: [
+      "Revisions to IMF global growth forecasts",
+      "Inflation forecast revisions",
+      "Commodity-price shock indicators",
+      "Central bank policy shifts",
+      "Emerging-market currency stress",
+    ],
+    intelligenceGaps: [
+      "Needs regional and sector-level interpretation for specific business users.",
+      "Macroeconomic outlooks can change quickly during conflict or energy-market shocks.",
+    ],
+    analystNote:
+      "This is a strong candidate for future live-data enrichment using IMF or World Bank indicators, but the assessed risk judgement should remain curated.",
+    sourceQualityNote:
+      "IMF WEO is a high-quality institutional source for macroeconomic outlooks, but forecasts are conditional and subject to revision.",
     sourceReferences: [
       {
         label: "IMF World Economic Outlook - April 2026",
@@ -108,6 +149,7 @@ export const riskItems = [
     level: "High",
     trend: "Increasing",
     confidence: "High",
+    reviewPriority: "High",
     summary:
       "Maritime disruption remains a strategic risk as route diversions, chokepoint concerns, and port/logistics pressures affect global trade flows and cost assumptions.",
     implications: [
@@ -123,7 +165,27 @@ export const riskItems = [
     sourceReliability: "High",
     informationConfidence: "High",
     sourceSummary:
-      "UNCTAD's 2025 maritime transport overview reports continuing Red Sea disruption, reduced Suez Canal transit levels, and heightened concern around strategic chokepoints including the Strait of Hormuz.",
+      "UNCTAD's 2025 maritime transport reporting highlights continuing Red Sea disruption, reduced Suez Canal transit levels, and heightened concern around strategic chokepoints including the Strait of Hormuz.",
+    curatedDataPoints: [
+      "UNCTAD reported that ship tonnage through the Suez Canal remained significantly below 2023 levels in early 2025.",
+      "UNCTAD highlights Red Sea disruption and concerns around strategic chokepoints.",
+      "The Strait of Hormuz is identified as strategically important for maritime trade and seaborne oil exports.",
+    ],
+    monitoringSignals: [
+      "Shipping diversions away from Suez / Red Sea routes",
+      "Insurance premium changes",
+      "Freight-rate spikes",
+      "Port congestion alerts",
+      "Escalation around Hormuz or other maritime chokepoints",
+    ],
+    intelligenceGaps: [
+      "Requires current freight-rate and vessel-tracking data for live operational assessment.",
+      "Requires sector-specific exposure mapping for client-specific supply-chain analysis.",
+    ],
+    analystNote:
+      "This is one of the strongest current sample indicators because the source base directly supports the maritime disruption theme.",
+    sourceQualityNote:
+      "UNCTAD is a high-quality institutional source for maritime trade and transport context. Live operational monitoring would require additional data feeds.",
     sourceReferences: [
       {
         label: "UNCTAD Review of Maritime Transport 2025",
@@ -148,6 +210,7 @@ export const riskItems = [
     level: "High",
     trend: "Increasing",
     confidence: "Medium",
+    reviewPriority: "High",
     summary:
       "Cyber risk is being reshaped by AI adoption, geopolitical fragmentation, cyber inequity, ransomware, supply-chain exposure, and exploitation of vulnerable digital infrastructure.",
     implications: [
@@ -163,7 +226,27 @@ export const riskItems = [
     sourceReliability: "Medium",
     informationConfidence: "Medium",
     sourceSummary:
-      "WEF's Global Cybersecurity Outlook 2026 highlights AI adoption, geopolitical fragmentation and cyber inequity as reshaping risk. Microsoft and ENISA reporting also point to ransomware, financially motivated threat activity, phishing, vulnerabilities, and exposed services as continuing issues.",
+      "WEF's Global Cybersecurity Outlook 2026 highlights AI adoption, geopolitical fragmentation and cyber inequity as reshaping cyber risk. Microsoft and ENISA reporting also point to ransomware, financially motivated threat activity, phishing, vulnerabilities, exposed services, and continuous campaigns as continuing issues.",
+    curatedDataPoints: [
+      "WEF highlights accelerating AI adoption, geopolitical fragmentation and widening cyber inequity.",
+      "Microsoft highlights financially motivated cybercriminals, phishing, unpatched assets and exposed services.",
+      "ENISA highlights convergent and continuous cyber pressure that can erode resilience.",
+    ],
+    monitoringSignals: [
+      "Ransomware activity targeting critical sectors",
+      "Cloud or identity-provider compromise",
+      "Major exploitation of unpatched vulnerabilities",
+      "AI-enabled phishing, fraud or deepfake activity",
+      "Supply-chain compromise affecting widely used software",
+    ],
+    intelligenceGaps: [
+      "Needs sector-specific threat modelling for practical operational use.",
+      "Needs current threat intelligence feeds before being treated as live cyber risk monitoring.",
+    ],
+    analystNote:
+      "The indicator is credible as a strategic risk theme, but operational cyber risk requires much more detailed sector, asset, and threat-actor analysis.",
+    sourceQualityNote:
+      "The source set combines institutional and vendor reporting. This improves coverage but requires care because vendor reporting may reflect the provider's visibility and customer base.",
     sourceReferences: [
       {
         label: "WEF Global Cybersecurity Outlook 2026",
@@ -194,6 +277,7 @@ export const riskItems = [
     level: "Medium",
     trend: "Stable",
     confidence: "Medium",
+    reviewPriority: "Medium",
     summary:
       "Energy security remains central to economic and national security as markets balance geopolitical fragility, affordability, sustainability, critical minerals, and electricity-system resilience.",
     implications: [
@@ -210,6 +294,26 @@ export const riskItems = [
     informationConfidence: "Medium",
     sourceSummary:
       "The IEA World Energy Outlook 2025 states that energy security is taking centre stage amid geopolitical strains, energy affordability and sustainability pressures, supply concerns, critical-minerals issues, and vulnerabilities in electricity systems.",
+    curatedDataPoints: [
+      "IEA frames energy as a core economic and national security issue.",
+      "IEA highlights critical minerals as an important security-of-supply issue.",
+      "Electricity systems are increasingly exposed to cyber, operational and weather-related hazards.",
+    ],
+    monitoringSignals: [
+      "Energy price spikes",
+      "Critical-mineral export restrictions",
+      "Power-grid reliability warnings",
+      "Cyber incidents affecting energy infrastructure",
+      "Major energy policy shifts in key economies",
+    ],
+    intelligenceGaps: [
+      "Needs regional energy-mix and supplier-exposure analysis.",
+      "Needs live market and policy tracking for operational monitoring.",
+    ],
+    analystNote:
+      "This indicator is useful for medium-term planning and resilience testing. It should be linked to region-specific energy dependencies in future versions.",
+    sourceQualityNote:
+      "IEA is a high-quality institutional energy source. Forecasts and scenario outputs are dependent on assumptions and policy pathways.",
     sourceReferences: [
       {
         label: "IEA World Energy Outlook 2025",
@@ -234,6 +338,7 @@ export const riskItems = [
     level: "Medium",
     trend: "Increasing",
     confidence: "Medium",
+    reviewPriority: "Medium",
     summary:
       "Diverging regulatory approaches across trade, sanctions, AI, cybersecurity, climate, energy, and supply chains may increase compliance complexity for global organisations.",
     implications: [
@@ -250,6 +355,26 @@ export const riskItems = [
     informationConfidence: "Medium",
     sourceSummary:
       "WEF's cybersecurity outlook highlights geopolitical fragmentation and sovereignty challenges, while the IEA World Energy Outlook notes that governments are reaching different conclusions on energy security, affordability and sustainability. Together, these support a broader regulatory-fragmentation risk theme.",
+    curatedDataPoints: [
+      "WEF highlights geopolitical fragmentation and sovereignty challenges in cyber risk.",
+      "IEA notes different government approaches to energy security, affordability and sustainability.",
+      "Regulatory divergence can affect data, AI, energy, trade, suppliers and sanctions exposure.",
+    ],
+    monitoringSignals: [
+      "New AI regulation",
+      "Sanctions expansion",
+      "Data localization or sovereignty requirements",
+      "Climate reporting rules",
+      "Supply-chain due diligence requirements",
+    ],
+    intelligenceGaps: [
+      "Needs jurisdiction-by-jurisdiction legal review for formal use.",
+      "Needs sector-specific mapping of regulatory exposure.",
+    ],
+    analystNote:
+      "This is a cross-cutting indicator that becomes more useful when mapped against a specific company, sector or country footprint.",
+    sourceQualityNote:
+      "The source base supports the theme but does not provide one single unified regulatory index. This should remain a medium-confidence assessment.",
     sourceReferences: [
       {
         label: "WEF Global Cybersecurity Outlook 2026",
@@ -274,6 +399,7 @@ export const riskItems = [
     level: "High",
     trend: "Increasing",
     confidence: "Medium",
+    reviewPriority: "High",
     summary:
       "Climate-linked disruption remains a strategic risk as emissions trajectories, overshoot risk, extreme weather, water stress, and resilience costs affect infrastructure, agriculture, logistics, insurance, and continuity planning.",
     implications: [
@@ -290,6 +416,26 @@ export const riskItems = [
     informationConfidence: "Medium",
     sourceSummary:
       "UNEP's Emissions Gap Report 2025 states that limiting overshoot requires faster and larger emissions reductions to minimize climate risks and damages, and that every fraction of a degree avoided reduces losses, costs and reliance on uncertain removal options.",
+    curatedDataPoints: [
+      "UNEP highlights the importance of limiting overshoot through faster emissions reductions.",
+      "The report links higher warming to greater climate risks, damages, losses and costs.",
+      "The indicator supports resilience planning rather than precise local hazard assessment.",
+    ],
+    monitoringSignals: [
+      "Extreme heat, flood, drought and wildfire events",
+      "Insurance-market stress",
+      "Infrastructure disruption caused by weather events",
+      "Water-stress indicators",
+      "Updates to emissions-gap and climate-risk reporting",
+    ],
+    intelligenceGaps: [
+      "Requires local hazard data for site-specific resilience planning.",
+      "Requires sector-specific climate exposure analysis for formal advisory use.",
+    ],
+    analystNote:
+      "This indicator should be treated as a strategic resilience pressure indicator. It is not a substitute for local climate-risk modelling.",
+    sourceQualityNote:
+      "UNEP is a high-quality institutional climate source. The assessment remains medium confidence because operational impacts are highly location-specific.",
     sourceReferences: [
       {
         label: "UNEP Emissions Gap Report 2025",
@@ -314,6 +460,7 @@ export const riskItems = [
     level: "Medium",
     trend: "Increasing",
     confidence: "Low",
+    reviewPriority: "Medium",
     summary:
       "Cost-of-living pressure, political polarization, misinformation, migration strain, cyber-enabled fraud, and declining institutional trust may increase protest, instability, and reputational risk.",
     implications: [
@@ -330,6 +477,26 @@ export const riskItems = [
     informationConfidence: "Low",
     sourceSummary:
       "WEF global risk and cybersecurity reporting highlights societal strain, cyber-enabled fraud, AI-related vulnerabilities, and wider risk turbulence. This indicator remains lower confidence because social stability risk is highly context-specific and requires localized validation.",
+    curatedDataPoints: [
+      "WEF reporting supports a broad societal-risk framing.",
+      "Cyber-enabled fraud, misinformation and AI-related vulnerabilities can contribute to trust erosion.",
+      "Social stability risks vary sharply by location, political context and economic conditions.",
+    ],
+    monitoringSignals: [
+      "Large-scale protests",
+      "Cost-of-living pressure indicators",
+      "Election-related instability",
+      "Misinformation and fraud campaigns",
+      "Public-service disruption",
+    ],
+    intelligenceGaps: [
+      "Requires local country-level and city-level validation.",
+      "Requires current media, civil unrest and political-risk monitoring before formal use.",
+    ],
+    analystNote:
+      "This is intentionally marked low confidence because social stability assessments should be localized and current.",
+    sourceQualityNote:
+      "The sources support the broad theme, but they do not provide sufficient local validation for a high-confidence assessment.",
     sourceReferences: [
       {
         label: "WEF Global Risks Report 2026",
@@ -395,7 +562,7 @@ export const methodology = {
     },
   ],
   confidence:
-    "Confidence reflects how strongly the cited public information supports the indicator assessment. In this prototype, confidence levels remain indicative and should not be treated as formal intelligence judgements.",
+    "Confidence reflects how strongly the cited public information supports the indicator assessment. In this public preview, confidence levels remain indicative and should not be treated as formal intelligence judgements.",
 };
 
 export const sourceMethodology = {
@@ -443,4 +610,17 @@ export const sourceMethodology = {
         "This assessment is included to demonstrate structure and workflow only. It is not a validated intelligence judgement.",
     },
   ],
+};
+
+export const dataCurationMethodology = {
+  curatedDataPoints:
+    "Curated data points capture the most useful source-backed facts or observations supporting the indicator.",
+  monitoringSignals:
+    "Monitoring signals identify developments that should be watched if the indicator is being used for planning or review.",
+  intelligenceGaps:
+    "Intelligence gaps identify what still needs to be validated before the indicator can be treated as a formal intelligence product.",
+  analystNote:
+    "The analyst note explains how the indicator should be interpreted in this public preview.",
+  reviewPriority:
+    "Review priority indicates how important it would be to refresh or validate the indicator before operational use.",
 };
