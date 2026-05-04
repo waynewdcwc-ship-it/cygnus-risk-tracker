@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   AlertTriangle,
   TrendingUp,
@@ -55,6 +55,28 @@ const mapMarkerStyles = {
   Medium: "#b8862b",
   High: "#b91c1c",
 };
+
+const WORLD_BANK_INDICATORS = [
+  {
+    id: "NY.GDP.MKTP.KD.ZG",
+    title: "Global GDP growth",
+    unit: "% annual growth",
+    note: "World Bank national accounts data and OECD National Accounts data files.",
+  },
+  {
+    id: "FP.CPI.TOTL.ZG",
+    title: "Global inflation, consumer prices",
+    unit: "% annual change",
+    note: "International Monetary Fund, International Financial Statistics and data files.",
+  },
+  {
+    id: "SL.UEM.TOTL.ZS",
+    title: "Global unemployment",
+    unit: "% of total labour force",
+    note: "ILO-modelled estimates reported through the World Bank indicator set.",
+  },
+];
+
 
 function TrendIcon({ trend }) {
   if (trend === "Increasing") return <TrendingUp className="h-4 w-4" />;
@@ -187,7 +209,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v1.3 Public Preview
+        Interactive global map · v1.4 Public Preview
       </div>
     </div>
   );
@@ -830,7 +852,7 @@ function HelpMethodologyMode() {
         <p className="mt-4 max-w-4xl text-base leading-7 text-slate-700">
           This section explains how to read the tracker, what the key terms
           mean, how the risk and source-confidence layers are structured, and
-          how the v1.3 data curation fields should be interpreted.
+          how the v1.4 data curation and live data fields should be interpreted.
         </p>
       </div>
 
@@ -931,7 +953,7 @@ function HelpMethodologyMode() {
         <SectionTitle
           icon={ClipboardList}
           title="Data Curation Methodology"
-          subtitle="How the enhanced v1.3 source and data fields should be interpreted."
+          subtitle="How the enhanced source, data curation, and live data fields should be interpreted."
         />
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -1074,14 +1096,150 @@ function HelpMethodologyMode() {
             Public preview status
           </h3>
           <p className="mt-2 text-sm leading-6 text-slate-700">
-            In v1.3, indicators include curated public source references and
-            enhanced data curation fields, but the tracker remains a public
+            In v1.4, indicators include curated public source references,
+            enhanced data curation fields, and a limited live data preview, but the tracker remains a public
             preview. It should not be treated as live intelligence reporting or
             formal advisory output.
           </p>
         </div>
       </div>
     </section>
+  );
+}
+
+function LiveDataPreviewPanel() {
+  const [items, setItems] = useState([]);
+  const [status, setStatus] = useState("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [fetchedAt, setFetchedAt] = useState(null);
+
+  const fetchWorldBankIndicators = async () => {
+    setStatus("loading");
+    setErrorMessage("");
+
+    try {
+      const results = await Promise.all(
+        WORLD_BANK_INDICATORS.map(async (indicator) => {
+          const response = await fetch(
+            `https://api.worldbank.org/v2/country/WLD/indicator/${indicator.id}?format=json&per_page=8`
+          );
+
+          if (!response.ok) {
+            throw new Error(`World Bank request failed for ${indicator.id}`);
+          }
+
+          const payload = await response.json();
+          const rows = Array.isArray(payload?.[1]) ? payload[1] : [];
+          const latest = rows.find(
+            (row) => row?.value !== null && row?.value !== undefined
+          );
+
+          return {
+            ...indicator,
+            year: latest?.date || "Not available",
+            value:
+              latest?.value !== null && latest?.value !== undefined
+                ? Number(latest.value)
+                : null,
+            source: latest?.indicator?.sourceNote || indicator.note,
+          };
+        })
+      );
+
+      setItems(results);
+      setFetchedAt(new Date());
+      setStatus("success");
+    } catch (error) {
+      setErrorMessage(
+        "Live data could not be loaded right now. The curated tracker remains available."
+      );
+      setStatus("error");
+    }
+  };
+
+  useEffect(() => {
+    fetchWorldBankIndicators();
+  }, []);
+
+  const formatValue = (item) => {
+    if (item.value === null) return "Not available";
+    return `${item.value.toFixed(2)} ${item.unit}`;
+  };
+
+  return (
+    <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+      <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <SectionTitle
+          icon={Globe2}
+          title="Live Data Preview"
+          subtitle="Selected open data indicators for contextual awareness only. This does not automatically change the curated risk assessments."
+        />
+
+        <button
+          onClick={fetchWorldBankIndicators}
+          className="mobile-full-button inline-flex items-center justify-center gap-2 rounded-2xl border border-[#d8dee8] bg-[#f8fafc] px-4 py-3 text-sm font-semibold text-[#0a3d91] transition hover:border-[#0a3d91]"
+        >
+          Refresh live data
+        </button>
+      </div>
+
+      <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
+          Live/open data note
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-slate-700">
+          These values are fetched from the World Bank Indicators API and are
+          provided as factual context only. They are not live intelligence
+          judgements, do not replace the curated source layer, and should not be
+          interpreted as automatic risk scores.
+        </p>
+      </div>
+
+      {status === "loading" && (
+        <div className="mt-4 rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4 text-sm text-slate-600">
+          Loading World Bank open data indicators...
+        </div>
+      )}
+
+      {status === "error" && (
+        <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+          {errorMessage}
+        </div>
+      )}
+
+      {status === "success" && (
+        <>
+          <div className="mt-4 grid gap-4 lg:grid-cols-3">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4"
+              >
+                <p className="text-xs uppercase tracking-wide text-slate-500">
+                  {item.id}
+                </p>
+                <h3 className="mt-2 font-semibold text-[#0a2f73]">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-2xl font-bold text-[#0a2f73]">
+                  {formatValue(item)}
+                </p>
+                <p className="mt-1 text-sm font-medium text-slate-500">
+                  Latest available year: {item.year}
+                </p>
+                <p className="mt-3 text-xs leading-5 text-slate-500">
+                  {item.note}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-4 text-xs text-slate-500">
+            Last fetched: {fetchedAt?.toLocaleString()}
+          </p>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -1120,7 +1278,7 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
           <div className="print-meta">
             <div className="print-meta-label">Tracker Version</div>
-            <div className="print-meta-value">v1.3.1 Public Preview</div>
+            <div className="print-meta-value">v1.4 Public Preview</div>
           </div>
 
           <div className="print-meta">
@@ -1330,7 +1488,7 @@ export default function App() {
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                   <Shield className="h-4 w-4 text-[#0a3d91]" />
-                  Tracker v1.3.1 · Banner Display Fix
+                  Tracker v1.4 · Live Data Preview Panel
                 </div>
 
                 <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -1344,8 +1502,8 @@ export default function App() {
                 <p className="mt-5 max-w-3xl text-base leading-7 text-slate-700 md:text-lg">
                   A public preview of the Cygnus strategic risk intelligence
                   framework — now with enhanced curated data points, monitoring
-                  signals, intelligence gaps, analyst notes, and source quality
-                  notes.
+                  signals, intelligence gaps, analyst notes, source quality
+                  notes, and a limited live/open data preview.
                 </p>
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -1457,11 +1615,10 @@ export default function App() {
 
                 <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.3.1 display update
+                    v1.4 live data preview
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    This release keeps the v1.3 curation layer and fixes the
-                    bottom branding banner so it displays without cropping.
+                    This release adds a limited live/open data preview panel while keeping the curated risk assessments separate and controlled.
                   </p>
                 </div>
               </div>
@@ -1471,7 +1628,7 @@ export default function App() {
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.3.1 public preview
+                    v1.4 public preview
                   </p>
                   <p className="mt-2 text-sm leading-6 text-slate-700">
                     This tracker uses source-backed sample indicators and
@@ -1483,7 +1640,7 @@ export default function App() {
                 </div>
 
                 <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-semibold text-[#0a2f73]">
-                  Version 1.3.1
+                  Version 1.4
                 </div>
               </div>
             </div>
@@ -1720,6 +1877,10 @@ export default function App() {
             </div>
 
             <div className="mt-6">
+              <LiveDataPreviewPanel />
+            </div>
+
+            <div className="mt-6">
               <SourceIntelligencePanel selectedItem={selectedItem} />
             </div>
 
@@ -1750,7 +1911,7 @@ export default function App() {
                 <SectionTitle
                   icon={Database}
                   title="Data Structure"
-                  subtitle="v1.3.1 keeps the curated source layer and fixes the banner display."
+                  subtitle="v1.4 keeps the curated source layer and adds a limited live/open data panel."
                 />
 
                 <div className="space-y-3">
@@ -1767,11 +1928,10 @@ export default function App() {
 
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Banner display fix
+                      Live data preview
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      The bottom branding banner now uses a contained image so
-                      it displays fully without cropping inside the card.
+                      The new live data preview uses selected World Bank open data indicators for context without automatically changing risk assessments.
                     </p>
                   </div>
 
@@ -1845,7 +2005,7 @@ export default function App() {
               <div className="text-left md:text-right">
                 <p>Cygnus Global Strategic Risk Intelligence Tracker</p>
                 <p className="mt-1 text-xs">
-                  v1.3.1 public preview · Banner display fix
+                  v1.4 public preview · Live data preview
                 </p>
               </div>
             </div>
