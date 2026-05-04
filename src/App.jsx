@@ -1,11 +1,6 @@
 import React, { useMemo, useState } from "react";
 import {
   AlertTriangle,
-  ShieldAlert,
-  Zap,
-  Truck,
-  Landmark,
-  Server,
   TrendingUp,
   TrendingDown,
   Minus,
@@ -168,7 +163,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v0.6
+        Interactive global map · v0.7
       </div>
     </div>
   );
@@ -248,7 +243,7 @@ function SourceIntelligencePanel({ selectedItem }) {
       <SectionTitle
         icon={FileSearch}
         title="Source Intelligence Layer"
-        subtitle="v0.5 introduced structured source reliability and information confidence fields."
+        subtitle="Structured source reliability and information confidence fields."
       />
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -419,7 +414,7 @@ function SourceMethodologyPanel() {
           Prototype status
         </h3>
         <p className="mt-2 text-sm leading-6 text-slate-700">
-          In v0.6, all current source fields are structural placeholders. They
+          In v0.7, all current source fields are structural placeholders. They
           demonstrate how the tracker can later present curated, source-backed
           risk indicators without yet claiming live intelligence validation.
         </p>
@@ -553,6 +548,277 @@ function SelectedBriefing({ selectedItem, onPrintBriefing }) {
   );
 }
 
+function ExecutiveBriefingMode({
+  riskItems,
+  selectedItem,
+  setSelectedItem,
+  onPrintBriefing,
+}) {
+  const highRiskItems = riskItems.filter((item) => item.level === "High");
+  const increasingItems = riskItems.filter(
+    (item) => item.trend === "Increasing"
+  );
+
+  return (
+    <section className="mx-auto max-w-7xl px-5 py-8 md:px-8">
+      <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-8">
+        <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+          <div>
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
+              Executive Briefing Mode
+            </div>
+
+            <h2 className="text-3xl font-bold tracking-tight text-[#0a2f73] md:text-4xl">
+              Global Strategic Risk Executive Briefing
+            </h2>
+
+            <p className="mt-4 max-w-3xl text-base leading-7 text-slate-700">
+              This briefing view converts the tracker into a concise executive
+              overview, highlighting priority risks, strategic themes, planning
+              assumptions, and selected indicator detail.
+            </p>
+          </div>
+
+          <button
+            onClick={onPrintBriefing}
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#0a3d91] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#082f70]"
+          >
+            <Printer className="h-4 w-4" />
+            Print Selected Briefing
+          </button>
+        </div>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-4">
+          <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+            <p className="text-xs uppercase tracking-wide text-slate-500">
+              Total indicators
+            </p>
+            <p className="mt-2 text-3xl font-bold text-[#0a2f73]">
+              {riskItems.length}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-4">
+            <p className="text-xs uppercase tracking-wide text-red-600">
+              High risk
+            </p>
+            <p className="mt-2 text-3xl font-bold text-red-700">
+              {highRiskItems.length}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
+            <p className="text-xs uppercase tracking-wide text-[#b8862b]">
+              Increasing trend
+            </p>
+            <p className="mt-2 text-3xl font-bold text-[#b8862b]">
+              {increasingItems.length}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-[#d8dee8] bg-white p-4">
+            <p className="text-xs uppercase tracking-wide text-slate-500">
+              Current posture
+            </p>
+            <p className="mt-2 text-xl font-bold text-[#0a2f73]">Elevated</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1fr]">
+        <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+          <SectionTitle
+            icon={AlertTriangle}
+            title="Priority Risk Indicators"
+            subtitle="High-risk indicators currently highlighted in the prototype."
+          />
+
+          <div className="space-y-3">
+            {highRiskItems.map((item) => {
+              const Icon = item.icon;
+              const active = selectedItem.id === item.id;
+
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setSelectedItem(item)}
+                  className={`w-full rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${
+                    active
+                      ? "border-[#b8862b] bg-[#fffaf1]"
+                      : "border-[#e3e8ef] bg-[#f8fafc]"
+                  }`}
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="rounded-2xl bg-white p-3 text-[#0a3d91]">
+                      <Icon className="h-5 w-5" />
+                    </div>
+
+                    <div className="flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <LevelPill level={item.level} />
+                        <MetadataPill>{item.trend}</MetadataPill>
+                        <MetadataPill>{item.category}</MetadataPill>
+                      </div>
+
+                      <h3 className="mt-3 font-semibold text-[#0a2f73]">
+                        {item.title}
+                      </h3>
+
+                      <p className="mt-2 text-sm leading-6 text-slate-600">
+                        {item.summary}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+          <SectionTitle
+            icon={TrendingUp}
+            title="Strategic Themes"
+            subtitle="Cross-cutting themes emerging from the current prototype indicators."
+          />
+
+          <div className="space-y-3">
+            <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+              <h3 className="font-semibold text-[#0a2f73]">
+                Volatility is multi-domain
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Strategic risk is not isolated to one category. Geopolitical,
+                cyber, logistics, climate, and regulatory pressures can interact
+                and amplify one another.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+              <h3 className="font-semibold text-[#0a2f73]">
+                Resilience assumptions matter
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Organisations should test assumptions around continuity,
+                suppliers, infrastructure, cyber resilience, and escalation
+                timelines.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+              <h3 className="font-semibold text-[#0a2f73]">
+                Source confidence remains prototype-level
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Current entries remain illustrative. The source credibility
+                framework is now in place for future validated source-backed
+                assessments.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+          <SectionTitle
+            icon={CheckCircle2}
+            title="Recommended Planning Posture"
+            subtitle="Suggested posture for strategic planning and scenario work."
+          />
+
+          <div className="space-y-3">
+            <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+              <p className="font-semibold text-[#0a2f73]">
+                Maintain active monitoring
+              </p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Monitor high-risk and increasing-trend indicators for changes in
+                severity, speed, and cross-domain impact.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+              <p className="font-semibold text-[#0a2f73]">
+                Build scenario assumptions
+              </p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Convert selected indicators into planning assumptions for
+                scenario development, continuity planning, and executive review.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+              <p className="font-semibold text-[#0a2f73]">
+                Prioritise resilience testing
+              </p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Test exposure to supplier disruption, cyber interruption,
+                logistics pressure, and regulatory change.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+          <SectionTitle
+            icon={FileText}
+            title="Current Selected Indicator"
+            subtitle="Executive summary of the selected risk indicator."
+          />
+
+          <div className="flex flex-wrap items-center gap-2">
+            <LevelPill level={selectedItem.level} />
+            <MetadataPill>{selectedItem.category}</MetadataPill>
+            <MetadataPill>Trend: {selectedItem.trend}</MetadataPill>
+            <MetadataPill>Confidence: {selectedItem.confidence}</MetadataPill>
+          </div>
+
+          <h3 className="mt-4 text-xl font-semibold text-[#0a2f73]">
+            {selectedItem.title}
+          </h3>
+
+          <p className="mt-2 text-sm font-medium text-slate-500">
+            {selectedItem.region}
+          </p>
+
+          <p className="mt-4 text-sm leading-6 text-slate-700">
+            {selectedItem.summary}
+          </p>
+
+          <div className="mt-4 rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+            <h4 className="font-semibold text-[#0a2f73]">
+              Planning assumption
+            </h4>
+            <p className="mt-2 text-sm leading-6 text-slate-700">
+              {selectedItem.assumption}
+            </p>
+          </div>
+
+          <button
+            onClick={onPrintBriefing}
+            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0a3d91] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#082f70]"
+          >
+            <Printer className="h-4 w-4" />
+            Print / Save This Briefing
+          </button>
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-50 p-5 shadow-sm md:p-6">
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
+          Executive briefing note
+        </h3>
+        <p className="mt-2 text-sm leading-6 text-slate-700">
+          This executive view is designed to summarise the tracker for quick
+          interpretation. Current risk entries remain illustrative prototype
+          content and should not be treated as validated intelligence reporting.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function PrintableBriefing({ selectedItem, lastUpdated }) {
   const referenceNumber = `CYG-GSRI-${String(selectedItem.id).padStart(
     3,
@@ -588,7 +854,7 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
           <div className="print-meta">
             <div className="print-meta-label">Tracker Version</div>
-            <div className="print-meta-value">v0.6 Prototype</div>
+            <div className="print-meta-value">v0.7 Prototype</div>
           </div>
 
           <div className="print-meta">
@@ -703,6 +969,7 @@ export default function App() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedItem, setSelectedItem] = useState(riskItems[0]);
   const [query, setQuery] = useState("");
+  const [viewMode, setViewMode] = useState("dashboard");
 
   const handlePrintBriefing = () => {
     window.print();
@@ -763,7 +1030,7 @@ export default function App() {
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                   <Shield className="h-4 w-4 text-[#0a3d91]" />
-                  Tracker v0.6 · Print Briefing Layer
+                  Tracker v0.7 · Executive Briefing Mode
                 </div>
 
                 <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -799,6 +1066,30 @@ export default function App() {
                     <Printer className="h-4 w-4" />
                     Print / Save Briefing
                   </button>
+
+                  <div className="flex rounded-full border border-[#d8dee8] bg-white p-1 shadow-sm">
+                    <button
+                      onClick={() => setViewMode("dashboard")}
+                      className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+                        viewMode === "dashboard"
+                          ? "bg-[#0a3d91] text-white"
+                          : "text-slate-600 hover:bg-[#f8fafc]"
+                      }`}
+                    >
+                      Dashboard
+                    </button>
+
+                    <button
+                      onClick={() => setViewMode("executive")}
+                      className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
+                        viewMode === "executive"
+                          ? "bg-[#0a3d91] text-white"
+                          : "text-slate-600 hover:bg-[#f8fafc]"
+                      }`}
+                    >
+                      Executive Briefing
+                    </button>
+                  </div>
                 </div>
               </div>
 
@@ -846,11 +1137,12 @@ export default function App() {
 
                 <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v0.6 enhancement
+                    v0.7 enhancement
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    This version adds a clean print / save briefing layer for
-                    the currently selected indicator.
+                    This version adds an executive briefing mode for a concise
+                    strategic overview while retaining the full dashboard and
+                    print briefing workflow.
                   </p>
                 </div>
               </div>
@@ -858,296 +1150,305 @@ export default function App() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-5 py-8 md:px-8">
-          <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-              <SectionTitle
-                icon={Layers}
-                title="Global Risk Indicator Cards"
-                subtitle="Filter indicators by category or keyword."
-              />
+        {viewMode === "executive" ? (
+          <ExecutiveBriefingMode
+            riskItems={riskItems}
+            selectedItem={selectedItem}
+            setSelectedItem={setSelectedItem}
+            onPrintBriefing={handlePrintBriefing}
+          />
+        ) : (
+          <section className="mx-auto max-w-7xl px-5 py-8 md:px-8">
+            <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+              <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+                <SectionTitle
+                  icon={Layers}
+                  title="Global Risk Indicator Cards"
+                  subtitle="Filter indicators by category or keyword."
+                />
 
-              <div className="mb-5 flex flex-col gap-3 sm:flex-row">
-                <div className="relative">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-                  <input
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search risks..."
-                    className="w-full rounded-xl border border-[#d8dee8] bg-white py-2 pl-9 pr-3 text-sm outline-none placeholder:text-slate-400 focus:border-[#0a3d91] sm:w-56"
-                  />
-                </div>
+                <div className="mb-5 flex flex-col gap-3 sm:flex-row">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <input
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      placeholder="Search risks..."
+                      className="w-full rounded-xl border border-[#d8dee8] bg-white py-2 pl-9 pr-3 text-sm outline-none placeholder:text-slate-400 focus:border-[#0a3d91] sm:w-56"
+                    />
+                  </div>
 
-                <div className="relative">
-                  <Filter className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="w-full appearance-none rounded-xl border border-[#d8dee8] bg-white py-2 pl-9 pr-9 text-sm outline-none focus:border-[#0a3d91] sm:w-52"
-                  >
-                    {categories.map((category) => (
-                      <option key={category}>{category}</option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                {filteredItems.map((item) => {
-                  const Icon = item.icon;
-                  const active = selectedItem.id === item.id;
-
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => setSelectedItem(item)}
-                      className={`rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${
-                        active
-                          ? "border-[#b8862b] bg-[#fffaf1]"
-                          : "border-[#e3e8ef] bg-white"
-                      }`}
+                  <div className="relative">
+                    <Filter className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="w-full appearance-none rounded-xl border border-[#d8dee8] bg-white py-2 pl-9 pr-9 text-sm outline-none focus:border-[#0a3d91] sm:w-52"
                     >
-                      <div className="flex items-start justify-between gap-3">
-                        <div className="rounded-2xl bg-[#eef4ff] p-3 text-[#0a3d91]">
-                          <Icon className="h-5 w-5" />
+                      {categories.map((category) => (
+                        <option key={category}>{category}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {filteredItems.map((item) => {
+                    const Icon = item.icon;
+                    const active = selectedItem.id === item.id;
+
+                    return (
+                      <button
+                        key={item.id}
+                        onClick={() => setSelectedItem(item)}
+                        className={`rounded-2xl border p-4 text-left transition hover:-translate-y-0.5 hover:shadow-md ${
+                          active
+                            ? "border-[#b8862b] bg-[#fffaf1]"
+                            : "border-[#e3e8ef] bg-white"
+                        }`}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="rounded-2xl bg-[#eef4ff] p-3 text-[#0a3d91]">
+                            <Icon className="h-5 w-5" />
+                          </div>
+                          <LevelPill level={item.level} />
                         </div>
-                        <LevelPill level={item.level} />
-                      </div>
 
-                      <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        {item.category}
-                      </p>
+                        <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                          {item.category}
+                        </p>
 
-                      <h3 className="mt-1 text-base font-semibold text-[#0a2f73]">
-                        {item.title}
-                      </h3>
+                        <h3 className="mt-1 text-base font-semibold text-[#0a2f73]">
+                          {item.title}
+                        </h3>
 
-                      <p className="mt-2 text-sm leading-6 text-slate-600">
-                        {item.summary}
-                      </p>
+                        <p className="mt-2 text-sm leading-6 text-slate-600">
+                          {item.summary}
+                        </p>
 
-                      <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
-                        <span>{item.region}</span>
-                        <span className="inline-flex items-center gap-1">
-                          <TrendIcon trend={item.trend} /> {item.trend}
-                        </span>
-                      </div>
+                        <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
+                          <span>{item.region}</span>
+                          <span className="inline-flex items-center gap-1">
+                            <TrendIcon trend={item.trend} /> {item.trend}
+                          </span>
+                        </div>
 
-                      <div className="mt-3 rounded-xl border border-[#e3e8ef] bg-[#f8fafc] px-3 py-2 text-xs text-slate-600">
-                        Source: {item.sourceReliability}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-                <SectionTitle
-                  icon={Globe2}
-                  title="Interactive Global Map"
-                  subtitle="Click a marker to select a risk indicator."
-                />
-
-                <GlobalRiskMap
-                  items={riskItems}
-                  selectedItem={selectedItem}
-                  setSelectedItem={setSelectedItem}
-                />
-
-                <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                  <span className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-red-700">
-                    High risk
-                  </span>
-                  <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-amber-700">
-                    Medium risk
-                  </span>
-                  <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-emerald-700">
-                    Low risk
-                  </span>
+                        <div className="mt-3 rounded-xl border border-[#e3e8ef] bg-[#f8fafc] px-3 py-2 text-xs text-slate-600">
+                          Source: {item.sourceReliability}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-                <SectionTitle
-                  icon={Info}
-                  title="Selected Indicator"
-                  subtitle="Current indicator metadata and source status."
-                />
+              <div className="space-y-6">
+                <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+                  <SectionTitle
+                    icon={Globe2}
+                    title="Interactive Global Map"
+                    subtitle="Click a marker to select a risk indicator."
+                  />
 
-                <div className="flex flex-wrap items-center gap-2">
-                  <LevelPill level={selectedItem.level} />
-                  <MetadataPill>
-                    Confidence: {selectedItem.confidence}
-                  </MetadataPill>
-                  <MetadataPill>Trend: {selectedItem.trend}</MetadataPill>
-                </div>
+                  <GlobalRiskMap
+                    items={riskItems}
+                    selectedItem={selectedItem}
+                    setSelectedItem={setSelectedItem}
+                  />
 
-                <h3 className="mt-4 text-lg font-semibold text-[#0a2f73]">
-                  {selectedItem.title}
-                </h3>
-
-                <p className="mt-2 text-sm leading-6 text-slate-700">
-                  {selectedItem.summary}
-                </p>
-
-                <div className="mt-4 grid gap-3">
-                  <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
-                    <p className="text-xs uppercase tracking-wide text-slate-500">
-                      Source reliability
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
-                      {selectedItem.sourceReliability}
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
-                    <p className="text-xs uppercase tracking-wide text-slate-500">
-                      Information confidence
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
-                      {selectedItem.informationConfidence}
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
-                    <p className="text-xs uppercase tracking-wide text-slate-500">
-                      Assessment status
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
-                      {selectedItem.assessmentStatus}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6">
-            <SelectedBriefing
-              selectedItem={selectedItem}
-              onPrintBriefing={handlePrintBriefing}
-            />
-          </div>
-
-          <div className="mt-6">
-            <SourceIntelligencePanel selectedItem={selectedItem} />
-          </div>
-
-          <div className="mt-6">
-            <MethodologyPanel />
-          </div>
-
-          <div className="mt-6">
-            <SourceMethodologyPanel />
-          </div>
-
-          <div className="mt-6 grid gap-6 lg:grid-cols-3">
-            <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-              <SectionTitle
-                icon={AlertTriangle}
-                title="Scenario Watchpoints"
-                subtitle="Issues decision-makers may wish to monitor closely."
-              />
-
-              <ul className="space-y-3">
-                {watchpoints.map((watchpoint, index) => (
-                  <li
-                    key={watchpoint}
-                    className="flex gap-3 rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3 text-sm leading-6 text-slate-700"
-                  >
-                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#eef4ff] text-xs font-bold text-[#0a3d91]">
-                      {index + 1}
+                  <div className="mt-4 flex flex-wrap gap-2 text-xs">
+                    <span className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-red-700">
+                      High risk
                     </span>
-                    {watchpoint}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-              <SectionTitle
-                icon={Database}
-                title="Data Structure"
-                subtitle="v0.6 prepares the tracker for briefing and export workflows."
-              />
-
-              <div className="space-y-3">
-                <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-                  <p className="font-semibold text-[#0a2f73]">
-                    Print-ready briefing
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">
-                    The selected indicator can now be printed or saved as a PDF
-                    using the browser print dialog.
-                  </p>
+                    <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-amber-700">
+                      Medium risk
+                    </span>
+                    <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-emerald-700">
+                      Low risk
+                    </span>
+                  </div>
                 </div>
 
-                <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-                  <p className="font-semibold text-[#0a2f73]">
-                    Briefing reference number
-                  </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">
-                    Each printed briefing includes a simple Cygnus reference
-                    number linked to the selected indicator.
-                  </p>
-                </div>
+                <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+                  <SectionTitle
+                    icon={Info}
+                    title="Selected Indicator"
+                    subtitle="Current indicator metadata and source status."
+                  />
 
-                <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-                  <p className="font-semibold text-[#0a2f73]">
-                    Future PDF export path
+                  <div className="flex flex-wrap items-center gap-2">
+                    <LevelPill level={selectedItem.level} />
+                    <MetadataPill>
+                      Confidence: {selectedItem.confidence}
+                    </MetadataPill>
+                    <MetadataPill>Trend: {selectedItem.trend}</MetadataPill>
+                  </div>
+
+                  <h3 className="mt-4 text-lg font-semibold text-[#0a2f73]">
+                    {selectedItem.title}
+                  </h3>
+
+                  <p className="mt-2 text-sm leading-6 text-slate-700">
+                    {selectedItem.summary}
                   </p>
-                  <p className="mt-2 text-sm leading-6 text-slate-600">
-                    This print layer prepares the tracker for a more advanced
-                    PDF export engine in a future version.
-                  </p>
+
+                  <div className="mt-4 grid gap-3">
+                    <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">
+                        Source reliability
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                        {selectedItem.sourceReliability}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">
+                        Information confidence
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                        {selectedItem.informationConfidence}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">
+                        Assessment status
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                        {selectedItem.assessmentStatus}
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-              <SectionTitle
-                icon={Building2}
-                title="Cygnus Development"
-                subtitle="Risk Intelligence Technology"
+            <div className="mt-6">
+              <SelectedBriefing
+                selectedItem={selectedItem}
+                onPrintBriefing={handlePrintBriefing}
               />
+            </div>
 
-              <p className="text-sm leading-7 text-slate-700">
-                Cygnus Development is a risk intelligence technology company
-                focused on helping leaders navigate uncertainty with greater
-                clarity, structure, and confidence. We build practical,
-                intelligence-led tools that combine structured methodology with
-                AI-enhanced insight to support stronger decisions, better
-                preparedness, and more resilient outcomes.
-              </p>
+            <div className="mt-6">
+              <SourceIntelligencePanel selectedItem={selectedItem} />
+            </div>
 
-              <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-                  Sources & Disclaimer
-                </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-700">
-                  This tracker currently uses sample data and illustrative risk
-                  indicators. Source references and reliability fields are
-                  structural placeholders for future source-backed entries. The
-                  tracker is intended to support strategic awareness, scenario
-                  thinking, and decision support. It should not be treated as
-                  official intelligence, legal advice, financial advice, or a
-                  substitute for professional judgement.
+            <div className="mt-6">
+              <MethodologyPanel />
+            </div>
+
+            <div className="mt-6">
+              <SourceMethodologyPanel />
+            </div>
+
+            <div className="mt-6 grid gap-6 lg:grid-cols-3">
+              <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+                <SectionTitle
+                  icon={AlertTriangle}
+                  title="Scenario Watchpoints"
+                  subtitle="Issues decision-makers may wish to monitor closely."
+                />
+
+                <ul className="space-y-3">
+                  {watchpoints.map((watchpoint, index) => (
+                    <li
+                      key={watchpoint}
+                      className="flex gap-3 rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3 text-sm leading-6 text-slate-700"
+                    >
+                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#eef4ff] text-xs font-bold text-[#0a3d91]">
+                        {index + 1}
+                      </span>
+                      {watchpoint}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+                <SectionTitle
+                  icon={Database}
+                  title="Data Structure"
+                  subtitle="v0.7 supports both dashboard and executive briefing workflows."
+                />
+
+                <div className="space-y-3">
+                  <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+                    <p className="font-semibold text-[#0a2f73]">
+                      Dashboard mode
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      The full tracker remains available for deeper exploration,
+                      map interaction, methodology review, and source structure.
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+                    <p className="font-semibold text-[#0a2f73]">
+                      Executive briefing mode
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Visitors can switch to a cleaner executive summary view
+                      focused on priority risk indicators and strategic themes.
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+                    <p className="font-semibold text-[#0a2f73]">
+                      Print-ready briefing
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      The selected indicator can still be printed or saved as a
+                      PDF using the browser print dialog.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+                <SectionTitle
+                  icon={Building2}
+                  title="Cygnus Development"
+                  subtitle="Risk Intelligence Technology"
+                />
+
+                <p className="text-sm leading-7 text-slate-700">
+                  Cygnus Development is a risk intelligence technology company
+                  focused on helping leaders navigate uncertainty with greater
+                  clarity, structure, and confidence. We build practical,
+                  intelligence-led tools that combine structured methodology
+                  with AI-enhanced insight to support stronger decisions, better
+                  preparedness, and more resilient outcomes.
                 </p>
+
+                <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
+                    Sources & Disclaimer
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-slate-700">
+                    This tracker currently uses sample data and illustrative risk
+                    indicators. Source references and reliability fields are
+                    structural placeholders for future source-backed entries. The
+                    tracker is intended to support strategic awareness, scenario
+                    thinking, and decision support. It should not be treated as
+                    official intelligence, legal advice, financial advice, or a
+                    substitute for professional judgement.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="mt-6 overflow-hidden rounded-3xl border border-[#d8dee8] bg-white shadow-sm">
-            <div
-              className="min-h-[320px] bg-cover bg-center"
-              style={{
-                backgroundImage: "url('/branding/cygnus-banner.png')",
-              }}
-            />
-          </div>
-        </section>
+            <div className="mt-6 overflow-hidden rounded-3xl border border-[#d8dee8] bg-white shadow-sm">
+              <div
+                className="min-h-[320px] bg-cover bg-center"
+                style={{
+                  backgroundImage: "url('/branding/cygnus-banner.png')",
+                }}
+              />
+            </div>
+          </section>
+        )}
       </div>
 
       <PrintableBriefing
