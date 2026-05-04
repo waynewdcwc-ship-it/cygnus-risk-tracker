@@ -1,13 +1,11 @@
 import React, { useMemo, useState } from "react";
 import {
   AlertTriangle,
-  Activity,
   ShieldAlert,
   Zap,
   Truck,
   Landmark,
   Server,
-  MapPin,
   TrendingUp,
   TrendingDown,
   Minus,
@@ -21,13 +19,17 @@ import {
   Building2,
   ArrowUpRight,
   Globe2,
+  BookOpen,
+  Database,
+  CheckCircle2,
+  BarChart3,
 } from "lucide-react";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-import { riskItems, watchpoints, lastUpdated } from "./riskData";
+import { riskItems, watchpoints, lastUpdated, methodology } from "./riskData";
 
 const levelStyles = {
   Low: "bg-emerald-50 text-emerald-700 border-emerald-200",
@@ -53,6 +55,14 @@ function LevelPill({ level }) {
       className={`rounded-full border px-3 py-1 text-xs font-semibold ${levelStyles[level]}`}
     >
       {level} Risk
+    </span>
+  );
+}
+
+function MetadataPill({ children }) {
+  return (
+    <span className="rounded-full border border-[#d8dee8] bg-[#f8fafc] px-3 py-1 text-xs text-slate-600">
+      {children}
     </span>
   );
 }
@@ -127,7 +137,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
             }}
           >
             <Popup>
-              <div style={{ maxWidth: "240px" }}>
+              <div style={{ maxWidth: "260px" }}>
                 <strong>{item.title}</strong>
                 <br />
                 <span>{item.region}</span>
@@ -136,6 +146,8 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
                 <span>
                   {item.level} risk · {item.trend}
                 </span>
+                <br />
+                <span>Confidence: {item.confidence}</span>
               </div>
             </Popup>
           </Marker>
@@ -143,7 +155,180 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v0.3
+        Interactive global map · v0.4
+      </div>
+    </div>
+  );
+}
+
+function MethodologyPanel() {
+  return (
+    <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+      <SectionTitle
+        icon={BookOpen}
+        title="Risk Methodology"
+        subtitle="How the prototype frames risk level, trend, and confidence."
+      />
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <div className="mb-3 flex items-center gap-2 text-[#0a3d91]">
+            <BarChart3 className="h-4 w-4" />
+            <h3 className="font-semibold">Risk Levels</h3>
+          </div>
+
+          <div className="space-y-3">
+            {methodology.riskLevels.map((item) => (
+              <div key={item.level}>
+                <LevelPill level={item.level} />
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  {item.meaning}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <div className="mb-3 flex items-center gap-2 text-[#0a3d91]">
+            <TrendingUp className="h-4 w-4" />
+            <h3 className="font-semibold">Trend Direction</h3>
+          </div>
+
+          <div className="space-y-3">
+            {methodology.trends.map((item) => (
+              <div key={item.trend}>
+                <p className="inline-flex items-center gap-1 rounded-full border border-[#d8dee8] bg-white px-3 py-1 text-xs font-semibold text-slate-700">
+                  <TrendIcon trend={item.trend} /> {item.trend}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  {item.meaning}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <div className="mb-3 flex items-center gap-2 text-[#0a3d91]">
+            <Shield className="h-4 w-4" />
+            <h3 className="font-semibold">Confidence</h3>
+          </div>
+
+          <p className="text-sm leading-6 text-slate-600">
+            {methodology.confidence}
+          </p>
+
+          <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-slate-700">
+            Current confidence ratings are for presentation testing only and do
+            not yet represent validated intelligence assessments.
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SelectedBriefing({ selectedItem }) {
+  return (
+    <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+      <SectionTitle
+        icon={FileText}
+        title="Selected Indicator Briefing"
+        subtitle="Structured briefing view for the currently selected indicator."
+      />
+
+      <div className="flex flex-wrap items-center gap-2">
+        <LevelPill level={selectedItem.level} />
+        <MetadataPill>Confidence: {selectedItem.confidence}</MetadataPill>
+        <MetadataPill>Trend: {selectedItem.trend}</MetadataPill>
+        <MetadataPill>Updated: {selectedItem.lastUpdated}</MetadataPill>
+      </div>
+
+      <h3 className="mt-4 text-xl font-semibold text-[#0a2f73]">
+        {selectedItem.title}
+      </h3>
+
+      <p className="mt-2 text-sm font-medium text-slate-500">
+        {selectedItem.region}
+      </p>
+
+      <div className="mt-5 grid gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <h4 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
+            <Info className="h-4 w-4" />
+            Assessment Summary
+          </h4>
+          <p className="mt-2 text-sm leading-6 text-slate-700">
+            {selectedItem.summary}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <h4 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
+            <CheckCircle2 className="h-4 w-4" />
+            Planning Assumption
+          </h4>
+          <p className="mt-2 text-sm leading-6 text-slate-700">
+            {selectedItem.assumption}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-[#e3e8ef] bg-white p-4">
+        <h4 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
+          <TrendingUp className="h-4 w-4" />
+          Strategic Implications
+        </h4>
+
+        <ul className="mt-3 grid gap-3 md:grid-cols-3">
+          {selectedItem.implications.map((implication) => (
+            <li
+              key={implication}
+              className="rounded-xl border border-[#e3e8ef] bg-[#f8fafc] p-3 text-sm leading-6 text-slate-700"
+            >
+              {implication}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="mt-4 grid gap-4 md:grid-cols-3">
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <p className="text-xs uppercase tracking-wide text-slate-500">
+            Source type
+          </p>
+          <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+            {selectedItem.sourceType}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <p className="text-xs uppercase tracking-wide text-slate-500">
+            Assessment status
+          </p>
+          <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+            {selectedItem.assessmentStatus}
+          </p>
+        </div>
+
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+          <p className="text-xs uppercase tracking-wide text-slate-500">
+            Source note
+          </p>
+          <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+            {selectedItem.sourceNote}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+        <h4 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
+          Confidence note
+        </h4>
+        <p className="mt-2 text-sm leading-6 text-slate-700">
+          {selectedItem.confidenceNote}
+        </p>
       </div>
     </div>
   );
@@ -208,7 +393,7 @@ export default function App() {
             <div>
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                 <Shield className="h-4 w-4 text-[#0a3d91]" />
-                Tracker v0.3 · Interactive Global Map
+                Tracker v0.4 · Methodology & Briefing Layer
               </div>
 
               <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -255,8 +440,8 @@ export default function App() {
               </div>
 
               <p className="mt-4 text-sm leading-6 text-slate-700">
-                Current sample indicators suggest a continuing requirement for
-                active monitoring, structured scenario planning, and robust
+                Current prototype indicators suggest a continuing requirement
+                for active monitoring, structured scenario planning, and robust
                 contingency assumptions across geopolitical, economic, cyber,
                 supply chain, climate, and regulatory domains.
               </p>
@@ -270,21 +455,31 @@ export default function App() {
                     Elevated
                   </p>
                 </div>
+
                 <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                   <p className="text-xs uppercase tracking-wide text-slate-500">
-                    Trend
+                    Status
                   </p>
                   <p className="mt-1 text-lg font-semibold text-[#0a2f73]">
-                    Mixed / volatile
+                    Prototype data
                   </p>
                 </div>
+              </div>
+
+              <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
+                  v0.4 enhancement
+                </p>
+                <p className="mt-1 text-sm leading-6 text-slate-700">
+                  This version adds methodology explanations, indicator metadata,
+                  and a structured briefing layer.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main content */}
       <section className="mx-auto max-w-7xl px-5 py-8 md:px-8">
         <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
           <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
@@ -344,9 +539,11 @@ export default function App() {
                     <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
                       {item.category}
                     </p>
+
                     <h3 className="mt-1 text-base font-semibold text-[#0a2f73]">
                       {item.title}
                     </h3>
+
                     <p className="mt-2 text-sm leading-6 text-slate-600">
                       {item.summary}
                     </p>
@@ -394,31 +591,61 @@ export default function App() {
               <SectionTitle
                 icon={Info}
                 title="Selected Indicator"
-                subtitle="Detailed view of the currently selected indicator."
+                subtitle="Current indicator metadata and assessment status."
               />
 
               <div className="flex flex-wrap items-center gap-2">
                 <LevelPill level={selectedItem.level} />
-                <span className="rounded-full border border-[#d8dee8] bg-[#f8fafc] px-3 py-1 text-xs text-slate-600">
-                  Confidence: {selectedItem.confidence}
-                </span>
-                <span className="rounded-full border border-[#d8dee8] bg-[#f8fafc] px-3 py-1 text-xs text-slate-600">
-                  Trend: {selectedItem.trend}
-                </span>
+                <MetadataPill>Confidence: {selectedItem.confidence}</MetadataPill>
+                <MetadataPill>Trend: {selectedItem.trend}</MetadataPill>
               </div>
 
               <h3 className="mt-4 text-lg font-semibold text-[#0a2f73]">
                 {selectedItem.title}
               </h3>
+
               <p className="mt-2 text-sm leading-6 text-slate-700">
                 {selectedItem.summary}
               </p>
 
-              <p className="mt-4 rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3 text-xs leading-5 text-slate-600">
-                Source note: {selectedItem.sourceNote}
-              </p>
+              <div className="mt-4 grid gap-3">
+                <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">
+                    Source type
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                    {selectedItem.sourceType}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">
+                    Assessment status
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                    {selectedItem.assessmentStatus}
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                  <p className="text-xs uppercase tracking-wide text-slate-500">
+                    Last updated
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                    {selectedItem.lastUpdated}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+
+        <div className="mt-6">
+          <SelectedBriefing selectedItem={selectedItem} />
+        </div>
+
+        <div className="mt-6">
+          <MethodologyPanel />
         </div>
 
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
@@ -446,59 +673,48 @@ export default function App() {
 
           <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
             <SectionTitle
-              icon={TrendingUp}
-              title="Strategic Implications"
-              subtitle="Potential second-order effects and decision implications."
+              icon={Database}
+              title="Data Structure"
+              subtitle="v0.4 prepares the tracker for future real-data integration."
             />
 
-            <h3 className="text-base font-semibold text-[#0a2f73]">
-              {selectedItem.title}
-            </h3>
+            <div className="space-y-3">
+              <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+                <p className="font-semibold text-[#0a2f73]">
+                  Separate data file
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Risk indicators are now held in a dedicated data structure,
+                  making future updates easier and safer.
+                </p>
+              </div>
 
-            <ul className="mt-4 space-y-3">
-              {selectedItem.implications.map((implication) => (
-                <li
-                  key={implication}
-                  className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3 text-sm leading-6 text-slate-700"
-                >
-                  {implication}
-                </li>
-              ))}
-            </ul>
-          </div>
+              <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+                <p className="font-semibold text-[#0a2f73]">
+                  Metadata-ready indicators
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  Each indicator can now carry update dates, source type,
+                  assessment status, and confidence notes.
+                </p>
+              </div>
 
-          <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-            <SectionTitle
-              icon={FileText}
-              title="Planning Assumption"
-              subtitle="Suggested planning premise for structured scenario work."
-            />
-
-            <p className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4 text-sm leading-6 text-slate-700">
-              {selectedItem.assumption}
-            </p>
-
-            <button className="mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0a3d91] px-4 py-3 font-semibold text-white transition hover:bg-[#082f70]">
-              Export Snapshot Later
-              <ArrowUpRight className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-6 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="overflow-hidden rounded-3xl border border-[#d8dee8] bg-white shadow-sm">
-            <div
-              className="min-h-[320px] bg-cover bg-center"
-              style={{
-                backgroundImage: "url('/branding/cygnus-banner.png')",
-              }}
-            />
+              <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+                <p className="font-semibold text-[#0a2f73]">
+                  Future source integration
+                </p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">
+                  This structure can later support curated OSINT references,
+                  analyst notes, and AI-assisted briefing generation.
+                </p>
+              </div>
+            </div>
           </div>
 
           <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
             <SectionTitle
               icon={Building2}
-              title="About Cygnus Development"
+              title="Cygnus Development"
               subtitle="Risk Intelligence Technology"
             />
 
@@ -511,36 +727,7 @@ export default function App() {
               preparedness, and more resilient outcomes.
             </p>
 
-            <div className="mt-5 grid gap-3 md:grid-cols-3">
-              <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-                <p className="font-semibold text-[#0a2f73]">
-                  Scenario Planning
-                </p>
-                <p className="mt-2 text-sm text-slate-600">
-                  Structured tools to explore uncertainty and alternative
-                  futures.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-                <p className="font-semibold text-[#0a2f73]">
-                  Strategic Risk Analysis
-                </p>
-                <p className="mt-2 text-sm text-slate-600">
-                  Intelligence-led identification and assessment of strategic
-                  risks.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-                <p className="font-semibold text-[#0a2f73]">
-                  Decision Support
-                </p>
-                <p className="mt-2 text-sm text-slate-600">
-                  Practical insights to support confident, structured decisions.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+            <div className="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4">
               <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
                 Sources & Disclaimer
               </h3>
@@ -555,6 +742,15 @@ export default function App() {
               </p>
             </div>
           </div>
+        </div>
+
+        <div className="mt-6 overflow-hidden rounded-3xl border border-[#d8dee8] bg-white shadow-sm">
+          <div
+            className="min-h-[320px] bg-cover bg-center"
+            style={{
+              backgroundImage: "url('/branding/cygnus-banner.png')",
+            }}
+          />
         </div>
       </section>
     </main>

@@ -11,6 +11,14 @@ import {
 
 export const lastUpdated = "May 2026";
 
+const prototypeMetadata = {
+  lastUpdated: "May 2026",
+  sourceType: "Illustrative / sample data",
+  assessmentStatus: "Prototype assessment",
+  confidenceNote:
+    "Confidence reflects the illustrative quality of the sample indicator and is not based on live-source validation.",
+};
+
 export const riskItems = [
   {
     id: 1,
@@ -32,6 +40,7 @@ export const riskItems = [
     icon: Globe2,
     coordinates: [34.0479, 100.6197],
     sourceNote: "Illustrative global strategic risk indicator.",
+    ...prototypeMetadata,
   },
   {
     id: 2,
@@ -53,6 +62,7 @@ export const riskItems = [
     icon: Landmark,
     coordinates: [51.5072, -0.1276],
     sourceNote: "Illustrative macroeconomic risk indicator.",
+    ...prototypeMetadata,
   },
   {
     id: 3,
@@ -74,6 +84,7 @@ export const riskItems = [
     icon: Truck,
     coordinates: [15.5007, 32.5599],
     sourceNote: "Illustrative maritime and logistics risk indicator.",
+    ...prototypeMetadata,
   },
   {
     id: 4,
@@ -95,6 +106,7 @@ export const riskItems = [
     icon: Server,
     coordinates: [37.7749, -122.4194],
     sourceNote: "Illustrative cyber and digital infrastructure risk indicator.",
+    ...prototypeMetadata,
   },
   {
     id: 5,
@@ -116,6 +128,7 @@ export const riskItems = [
     icon: Zap,
     coordinates: [25.2048, 55.2708],
     sourceNote: "Illustrative energy security risk indicator.",
+    ...prototypeMetadata,
   },
   {
     id: 6,
@@ -137,6 +150,7 @@ export const riskItems = [
     icon: ShieldAlert,
     coordinates: [50.8503, 4.3517],
     sourceNote: "Illustrative regulatory fragmentation risk indicator.",
+    ...prototypeMetadata,
   },
   {
     id: 7,
@@ -158,6 +172,7 @@ export const riskItems = [
     icon: AlertTriangle,
     coordinates: [-15.7835, -47.8668],
     sourceNote: "Illustrative climate and resilience risk indicator.",
+    ...prototypeMetadata,
   },
   {
     id: 8,
@@ -179,6 +194,7 @@ export const riskItems = [
     icon: Activity,
     coordinates: [30.0444, 31.2357],
     sourceNote: "Illustrative social stability risk indicator.",
+    ...prototypeMetadata,
   },
 ];
 
@@ -191,3 +207,42 @@ export const watchpoints = [
   "Regulatory fragmentation affecting data, AI, trade, sanctions, climate, or supply chains",
   "Public unrest or political instability caused by economic pressure, mistrust, or polarisation",
 ];
+
+export const methodology = {
+  riskLevels: [
+    {
+      level: "High",
+      meaning:
+        "A high-risk indicator suggests a material strategic issue that may require active monitoring, contingency planning, or leadership attention.",
+    },
+    {
+      level: "Medium",
+      meaning:
+        "A medium-risk indicator suggests a developing or persistent issue that should be monitored and included in planning assumptions.",
+    },
+    {
+      level: "Low",
+      meaning:
+        "A low-risk indicator suggests limited immediate strategic pressure, but may still require periodic review.",
+    },
+  ],
+  trends: [
+    {
+      trend: "Increasing",
+      meaning:
+        "The indicator is assessed as becoming more significant, more complex, or more likely to affect strategic planning.",
+    },
+    {
+      trend: "Stable",
+      meaning:
+        "The indicator remains relevant but is not currently assessed as significantly worsening or improving.",
+    },
+    {
+      trend: "Decreasing",
+      meaning:
+        "The indicator is assessed as easing or becoming less strategically significant.",
+    },
+  ],
+  confidence:
+    "Confidence reflects how strongly the available information supports the indicator assessment. In this prototype, confidence levels are illustrative and should not be treated as validated intelligence judgements.",
+};
