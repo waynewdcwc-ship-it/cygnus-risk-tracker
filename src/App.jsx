@@ -87,6 +87,21 @@ function SectionTitle({ icon: Icon, title, subtitle }) {
   );
 }
 
+function ViewModeButton({ active, onClick, children }) {
+  return (
+    <button
+      onClick={onClick}
+      className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
+        active
+          ? "bg-[#0a3d91] text-white shadow-sm"
+          : "text-slate-600 hover:bg-[#f8fafc]"
+      }`}
+    >
+      {children}
+    </button>
+  );
+}
+
 function createRiskMarker(level, isSelected) {
   const color = mapMarkerStyles[level] || "#0a3d91";
 
@@ -165,7 +180,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v1.1 Public Preview
+        Interactive global map · v1.2 Public Preview
       </div>
     </div>
   );
@@ -302,7 +317,7 @@ function SelectedBriefing({ selectedItem, onPrintBriefing }) {
 
         <button
           onClick={onPrintBriefing}
-          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#0a3d91] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#082f70]"
+          className="mobile-full-button inline-flex items-center justify-center gap-2 rounded-2xl bg-[#0a3d91] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#082f70]"
         >
           Print / Save Selected Briefing
           <Download className="h-4 w-4" />
@@ -427,7 +442,7 @@ function ExecutiveBriefingMode({
   );
 
   return (
-    <section className="mx-auto max-w-7xl px-5 py-8 md:px-8">
+    <section className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8">
       <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-8">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
           <div>
@@ -448,14 +463,14 @@ function ExecutiveBriefingMode({
 
           <button
             onClick={onPrintBriefing}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#0a3d91] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#082f70]"
+            className="mobile-full-button inline-flex items-center justify-center gap-2 rounded-2xl bg-[#0a3d91] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#082f70]"
           >
             <Printer className="h-4 w-4" />
             Print Selected Briefing
           </button>
         </div>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-4">
+        <div className="mobile-card-stack mt-8 grid gap-4 md:grid-cols-4">
           <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
             <p className="text-xs uppercase tracking-wide text-slate-500">
               Total indicators
@@ -515,8 +530,8 @@ function ExecutiveBriefingMode({
                       : "border-[#e3e8ef] bg-[#f8fafc]"
                   }`}
                 >
-                  <div className="flex items-start gap-3">
-                    <div className="rounded-2xl bg-white p-3 text-[#0a3d91]">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+                    <div className="w-fit rounded-2xl bg-white p-3 text-[#0a3d91]">
                       <Icon className="h-5 w-5" />
                     </div>
 
@@ -619,7 +634,7 @@ function ExecutiveBriefingMode({
                 Validate before formal use
               </p>
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Treat the v1.1 indicators as source-backed samples that
+                Treat the v1.2 indicators as source-backed samples that
                 demonstrate structure, not as final intelligence products.
               </p>
             </div>
@@ -663,7 +678,7 @@ function ExecutiveBriefingMode({
 
           <button
             onClick={onPrintBriefing}
-            className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0a3d91] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#082f70]"
+            className="mobile-full-button mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0a3d91] px-4 py-3 text-sm font-semibold text-white transition hover:bg-[#082f70]"
           >
             <Printer className="h-4 w-4" />
             Print / Save This Briefing
@@ -687,7 +702,7 @@ function ExecutiveBriefingMode({
 
 function HelpMethodologyMode() {
   return (
-    <section className="mx-auto max-w-7xl px-5 py-8 md:px-8">
+    <section className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8">
       <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-8">
         <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
           Help & Methodology
@@ -919,7 +934,7 @@ function HelpMethodologyMode() {
             Public preview status
           </h3>
           <p className="mt-2 text-sm leading-6 text-slate-700">
-            In v1.1, indicators include curated public source references, but
+            In v1.2, indicators include curated public source references, but
             the tracker remains a public preview. It should not be treated as
             live intelligence reporting or formal advisory output.
           </p>
@@ -964,7 +979,7 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
           <div className="print-meta">
             <div className="print-meta-label">Tracker Version</div>
-            <div className="print-meta-value">v1.1 Public Preview</div>
+            <div className="print-meta-value">v1.2 Public Preview</div>
           </div>
 
           <div className="print-meta">
@@ -1109,7 +1124,7 @@ export default function App() {
     <main className="min-h-screen bg-[#f4f6f9] text-slate-900">
       <div className="screen-content">
         <div className="border-b border-[#d8dee8] bg-white">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3 md:px-8">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-8">
             <div>
               <p className="text-sm font-semibold tracking-wide text-[#0a3d91]">
                 CYGNUS DEVELOPMENT
@@ -1128,19 +1143,19 @@ export default function App() {
 
         <section className="relative overflow-hidden border-b border-[#d8dee8] bg-white">
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-25"
+            className="absolute inset-0 bg-cover bg-center opacity-20"
             style={{
               backgroundImage: "url('/branding/cygnus-hero-wide.png')",
             }}
           />
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.95)_0%,rgba(255,255,255,0.88)_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.97)_0%,rgba(255,255,255,0.91)_100%)]" />
 
-          <div className="relative mx-auto max-w-7xl px-5 py-12 md:px-8 md:py-16">
-            <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+          <div className="relative mx-auto max-w-7xl px-4 py-10 md:px-8 md:py-14">
+            <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                   <Shield className="h-4 w-4 text-[#0a3d91]" />
-                  Tracker v1.1 · Help &amp; Methodology Tab
+                  Tracker v1.2 · Mobile Polish &amp; Cleaner Landing Intro
                 </div>
 
                 <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -1152,89 +1167,99 @@ export default function App() {
                 </p>
 
                 <p className="mt-5 max-w-3xl text-base leading-7 text-slate-700 md:text-lg">
-                  A Cygnus Development dashboard for monitoring global strategic
-                  risk indicators, scenario watchpoints, planning assumptions,
-                  and strategic implications to support clearer, more structured
-                  decision-making.
+                  A public preview of the Cygnus strategic risk intelligence
+                  framework — designed to turn global risk themes, source
+                  credibility, scenario watchpoints, and planning assumptions
+                  into a practical decision-support dashboard.
                 </p>
 
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <span className="rounded-full border border-[#d8dee8] bg-white px-4 py-2 text-sm font-medium text-slate-700">
-                    Intelligent Risk Analysis
-                  </span>
-                  <span className="rounded-full border border-[#d8dee8] bg-white px-4 py-2 text-sm font-medium text-slate-700">
-                    Global Perspective
-                  </span>
-                  <span className="rounded-full border border-[#d8dee8] bg-white px-4 py-2 text-sm font-medium text-slate-700">
-                    Strategic Decision Support
-                  </span>
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-2xl border border-[#d8dee8] bg-white/95 p-4 shadow-sm">
+                    <p className="font-semibold text-[#0a2f73]">
+                      Explore risks
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Review source-backed sample indicators and selected
+                      briefing detail.
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-[#d8dee8] bg-white/95 p-4 shadow-sm">
+                    <p className="font-semibold text-[#0a2f73]">
+                      Brief clearly
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Switch to executive mode or print a selected risk
+                      briefing.
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-[#d8dee8] bg-white/95 p-4 shadow-sm">
+                    <p className="font-semibold text-[#0a2f73]">
+                      Understand confidence
+                    </p>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      Use the help tab to understand terminology and source
+                      credibility.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                  <button
+                    onClick={() => setViewMode("dashboard")}
+                    className="mobile-full-button inline-flex items-center justify-center gap-2 rounded-full bg-[#0a3d91] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#082f70]"
+                  >
+                    <Layers className="h-4 w-4" />
+                    Explore Dashboard
+                  </button>
+
+                  <button
+                    onClick={() => setViewMode("executive")}
+                    className="mobile-full-button inline-flex items-center justify-center gap-2 rounded-full border border-[#d8dee8] bg-white px-5 py-3 text-sm font-semibold text-[#0a3d91] shadow-sm transition hover:border-[#0a3d91]"
+                  >
+                    <FileText className="h-4 w-4" />
+                    View Executive Briefing
+                  </button>
+
+                  <button
+                    onClick={() => setViewMode("help")}
+                    className="mobile-full-button inline-flex items-center justify-center gap-2 rounded-full border border-[#d8dee8] bg-white px-5 py-3 text-sm font-semibold text-[#0a3d91] shadow-sm transition hover:border-[#0a3d91]"
+                  >
+                    <HelpCircle className="h-4 w-4" />
+                    Help & Methodology
+                  </button>
 
                   <button
                     onClick={handlePrintBriefing}
-                    className="inline-flex items-center gap-2 rounded-full bg-[#0a3d91] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#082f70]"
+                    className="mobile-full-button inline-flex items-center justify-center gap-2 rounded-full border border-[#d8dee8] bg-[#f8fafc] px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-[#0a3d91]"
                   >
                     <Printer className="h-4 w-4" />
                     Print / Save Briefing
                   </button>
-
-                  <div className="flex flex-wrap rounded-3xl border border-[#d8dee8] bg-white p-1 shadow-sm">
-                    <button
-                      onClick={() => setViewMode("dashboard")}
-                      className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
-                        viewMode === "dashboard"
-                          ? "bg-[#0a3d91] text-white"
-                          : "text-slate-600 hover:bg-[#f8fafc]"
-                      }`}
-                    >
-                      Dashboard
-                    </button>
-
-                    <button
-                      onClick={() => setViewMode("executive")}
-                      className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
-                        viewMode === "executive"
-                          ? "bg-[#0a3d91] text-white"
-                          : "text-slate-600 hover:bg-[#f8fafc]"
-                      }`}
-                    >
-                      Executive Briefing
-                    </button>
-
-                    <button
-                      onClick={() => setViewMode("help")}
-                      className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${
-                        viewMode === "help"
-                          ? "bg-[#0a3d91] text-white"
-                          : "text-slate-600 hover:bg-[#f8fafc]"
-                      }`}
-                    >
-                      Help & Methodology
-                    </button>
-                  </div>
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-[#d8dee8] bg-white/95 p-6 shadow-xl">
+              <div className="rounded-3xl border border-[#d8dee8] bg-white/95 p-5 shadow-xl md:p-6">
                 <div className="flex items-start gap-3">
                   <div className="rounded-2xl bg-[#eef4ff] p-3 text-[#0a3d91]">
                     <Building2 className="h-6 w-6" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-slate-500">
-                      Executive Snapshot
+                      Public Preview Snapshot
                     </p>
                     <h2 className="text-2xl font-semibold text-[#0a2f73]">
-                      Elevated global uncertainty
+                      Structured global risk insight
                     </h2>
                   </div>
                 </div>
 
                 <p className="mt-4 text-sm leading-6 text-slate-700">
                   Current public preview indicators suggest a continuing
-                  requirement for active monitoring, structured scenario
-                  planning, and robust contingency assumptions across
-                  geopolitical, economic, cyber, supply chain, climate, and
-                  regulatory domains.
+                  requirement for active monitoring, scenario planning, and
+                  robust contingency assumptions across geopolitical, economic,
+                  cyber, supply chain, climate, and regulatory domains.
                 </p>
 
                 <div className="mt-5 grid grid-cols-2 gap-3">
@@ -1259,38 +1284,59 @@ export default function App() {
 
                 <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.1 usability update
+                    v1.2 usability update
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    This release moves deeper methodology and terminology
-                    explanations into a dedicated Help & Methodology tab,
-                    keeping the dashboard cleaner and easier to use.
+                    This release improves the first-screen landing experience and
+                    mobile usability while keeping the dashboard, executive
+                    briefing, help tab, and print workflow intact.
                   </p>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
 
-        <section className="mx-auto max-w-7xl px-5 pt-6 md:px-8">
-          <div className="rounded-3xl border border-amber-200 bg-amber-50 p-4 shadow-sm md:p-5">
-            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-              <div>
-                <p className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-                  v1.1 public preview
-                </p>
-                <p className="mt-2 text-sm leading-6 text-slate-700">
-                  This tracker is a public preview of the Cygnus strategic risk
-                  intelligence framework. It uses source-backed sample
-                  indicators to demonstrate how global risk themes, source
-                  credibility, scenario watchpoints, and planning assumptions can
-                  be structured into a practical decision-support dashboard. It
-                  should not yet be treated as live intelligence reporting.
-                </p>
+            <div className="mt-6 rounded-3xl border border-amber-200 bg-amber-50 p-4 shadow-sm md:p-5">
+              <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
+                    v1.2 public preview
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-slate-700">
+                    This tracker uses source-backed sample indicators to
+                    demonstrate the Cygnus risk intelligence framework. It
+                    should not yet be treated as live intelligence reporting,
+                    formal advisory output, legal advice, or financial advice.
+                  </p>
+                </div>
+
+                <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-semibold text-[#0a2f73]">
+                  Version 1.2
+                </div>
               </div>
+            </div>
 
-              <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-semibold text-[#0a2f73]">
-                Version 1.1
+            <div className="mt-6 rounded-3xl border border-[#d8dee8] bg-white p-2 shadow-sm">
+              <div className="mobile-scroll-row flex flex-wrap gap-2">
+                <ViewModeButton
+                  active={viewMode === "dashboard"}
+                  onClick={() => setViewMode("dashboard")}
+                >
+                  Dashboard
+                </ViewModeButton>
+
+                <ViewModeButton
+                  active={viewMode === "executive"}
+                  onClick={() => setViewMode("executive")}
+                >
+                  Executive Briefing
+                </ViewModeButton>
+
+                <ViewModeButton
+                  active={viewMode === "help"}
+                  onClick={() => setViewMode("help")}
+                >
+                  Help & Methodology
+                </ViewModeButton>
               </div>
             </div>
           </div>
@@ -1306,7 +1352,7 @@ export default function App() {
         ) : viewMode === "help" ? (
           <HelpMethodologyMode />
         ) : (
-          <section className="mx-auto max-w-7xl px-5 py-8 md:px-8">
+          <section className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8">
             <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
               <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
                 <SectionTitle
@@ -1317,21 +1363,21 @@ export default function App() {
 
                 <div className="mb-5 flex flex-col gap-3 sm:flex-row">
                   <div className="relative">
-                    <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <Search className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                     <input
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       placeholder="Search risks..."
-                      className="w-full rounded-xl border border-[#d8dee8] bg-white py-2 pl-9 pr-3 text-sm outline-none placeholder:text-slate-400 focus:border-[#0a3d91] sm:w-56"
+                      className="w-full rounded-xl border border-[#d8dee8] bg-white py-2.5 pl-9 pr-3 text-sm outline-none placeholder:text-slate-400 focus:border-[#0a3d91] sm:w-56"
                     />
                   </div>
 
                   <div className="relative">
-                    <Filter className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+                    <Filter className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
                     <select
                       value={selectedCategory}
                       onChange={(e) => setSelectedCategory(e.target.value)}
-                      className="w-full appearance-none rounded-xl border border-[#d8dee8] bg-white py-2 pl-9 pr-9 text-sm outline-none focus:border-[#0a3d91] sm:w-52"
+                      className="w-full appearance-none rounded-xl border border-[#d8dee8] bg-white py-2.5 pl-9 pr-9 text-sm outline-none focus:border-[#0a3d91] sm:w-52"
                     >
                       {categories.map((category) => (
                         <option key={category}>{category}</option>
@@ -1374,7 +1420,7 @@ export default function App() {
                           {item.summary}
                         </p>
 
-                        <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
+                        <div className="mt-4 flex flex-col gap-2 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
                           <span>{item.region}</span>
                           <span className="inline-flex items-center gap-1">
                             <TrendIcon trend={item.trend} /> {item.trend}
@@ -1510,29 +1556,27 @@ export default function App() {
                 <SectionTitle
                   icon={Database}
                   title="Data Structure"
-                  subtitle="v1.1 keeps the main dashboard focused while moving explanations into Help."
+                  subtitle="v1.2 improves first-screen usability and mobile presentation."
                 />
 
                 <div className="space-y-3">
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Cleaner dashboard
+                      Cleaner landing intro
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      The main dashboard now focuses on risk exploration,
-                      selected indicator detail, source links, and briefing
-                      output.
+                      The top of the tracker now acts as a clearer front door
+                      into the dashboard, executive briefing, and help sections.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Help & methodology tab
+                      Mobile polish
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Terminology, risk methodology, source reliability, and
-                      information confidence explanations are now grouped in one
-                      dedicated area.
+                      Navigation, button spacing, map height, and card layouts
+                      have been improved for smaller screens.
                     </p>
                   </div>
 
@@ -1583,7 +1627,7 @@ export default function App() {
 
             <div className="mt-6 overflow-hidden rounded-3xl border border-[#d8dee8] bg-white shadow-sm">
               <div
-                className="min-h-[320px] bg-cover bg-center"
+                className="min-h-[260px] bg-cover bg-center md:min-h-[320px]"
                 style={{
                   backgroundImage: "url('/branding/cygnus-banner.png')",
                 }}
@@ -1592,7 +1636,7 @@ export default function App() {
           </section>
         )}
 
-        <footer className="mx-auto max-w-7xl px-5 pb-8 md:px-8">
+        <footer className="mx-auto max-w-7xl px-4 pb-8 md:px-8">
           <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 text-sm text-slate-600 shadow-sm md:p-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
@@ -1607,7 +1651,7 @@ export default function App() {
               <div className="text-left md:text-right">
                 <p>Cygnus Global Strategic Risk Intelligence Tracker</p>
                 <p className="mt-1 text-xs">
-                  v1.1 public preview · Help & methodology tab
+                  v1.2 public preview · Mobile polish & cleaner landing intro
                 </p>
               </div>
             </div>

@@ -6,6 +6,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -22,12 +23,23 @@ select {
   -webkit-tap-highlight-color: transparent;
 }
 
+button,
+a {
+  touch-action: manipulation;
+}
+
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible {
   outline: 3px solid rgba(10, 61, 145, 0.35);
   outline-offset: 3px;
+}
+
+input,
+select,
+textarea {
+  font-size: 16px;
 }
 
 .leaflet-container {
@@ -38,18 +50,80 @@ select:focus-visible {
   display: none;
 }
 
-/* Small-screen polish */
+/* Better mobile behaviour for the tracker */
+@media (max-width: 768px) {
+  .screen-content h1 {
+    word-break: normal;
+    overflow-wrap: normal;
+    line-height: 1.08;
+  }
+
+  .screen-content h2 {
+    line-height: 1.18;
+  }
+
+  .screen-content p {
+    overflow-wrap: break-word;
+  }
+
+  .screen-content button,
+  .screen-content a {
+    min-height: 44px;
+  }
+
+  .leaflet-container {
+    min-height: 300px;
+  }
+}
+
 @media (max-width: 640px) {
+  body {
+    background: #f4f6f9;
+  }
+
   .leaflet-container {
     min-height: 280px;
   }
 
-  .screen-content h1 {
-    word-break: normal;
+  .mobile-tight {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 
-  .screen-content button {
-    min-height: 42px;
+  .mobile-scroll-row {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding-bottom: 0.25rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .mobile-scroll-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .mobile-scroll-row > * {
+    flex: 0 0 auto;
+  }
+
+  .mobile-full-button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .mobile-card-stack {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .screen-content h1 {
+    font-size: 2.25rem;
+  }
+
+  .leaflet-container {
+    min-height: 260px;
   }
 }
 
@@ -60,6 +134,7 @@ select:focus-visible {
     margin: 14mm;
   }
 
+  html,
   body {
     background: white;
   }
