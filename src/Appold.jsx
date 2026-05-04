@@ -1120,7 +1120,7 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
           <div className="print-meta">
             <div className="print-meta-label">Tracker Version</div>
-            <div className="print-meta-value">v1.3.1 Public Preview</div>
+            <div className="print-meta-value">v1.3 Public Preview</div>
           </div>
 
           <div className="print-meta">
@@ -1330,7 +1330,7 @@ export default function App() {
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                   <Shield className="h-4 w-4 text-[#0a3d91]" />
-                  Tracker v1.3.1 · Banner Display Fix
+                  Tracker v1.3 · Enhanced Source &amp; Data Curation
                 </div>
 
                 <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -1457,11 +1457,11 @@ export default function App() {
 
                 <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.3.1 display update
+                    v1.3 data curation update
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    This release keeps the v1.3 curation layer and fixes the
-                    bottom branding banner so it displays without cropping.
+                    This release improves the curated source layer while keeping
+                    the tracker static, stable, and suitable for Vercel hosting.
                   </p>
                 </div>
               </div>
@@ -1471,7 +1471,7 @@ export default function App() {
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.3.1 public preview
+                    v1.3 public preview
                   </p>
                   <p className="mt-2 text-sm leading-6 text-slate-700">
                     This tracker uses source-backed sample indicators and
@@ -1483,7 +1483,7 @@ export default function App() {
                 </div>
 
                 <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-semibold text-[#0a2f73]">
-                  Version 1.3.1
+                  Version 1.3
                 </div>
               </div>
             </div>
@@ -1750,7 +1750,7 @@ export default function App() {
                 <SectionTitle
                   icon={Database}
                   title="Data Structure"
-                  subtitle="v1.3.1 keeps the curated source layer and fixes the banner display."
+                  subtitle="v1.3 strengthens the curated source and data layer."
                 />
 
                 <div className="space-y-3">
@@ -1759,19 +1759,19 @@ export default function App() {
                       Enhanced curation
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Each indicator includes curated data points, monitoring
-                      signals, intelligence gaps, analyst notes and source
-                      quality notes.
+                      Each indicator now includes curated data points,
+                      monitoring signals, intelligence gaps, analyst notes and
+                      source quality notes.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Banner display fix
+                      Review priority
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      The bottom branding banner now uses a contained image so
-                      it displays fully without cropping inside the card.
+                      Review priority helps identify which indicators should be
+                      refreshed or validated first.
                     </p>
                   </div>
 
@@ -1820,11 +1820,12 @@ export default function App() {
               </div>
             </div>
 
-            <div className="mt-6 overflow-hidden rounded-3xl border border-[#d8dee8] bg-white p-4 shadow-sm">
-              <img
-                src="/branding/cygnus-banner.png"
-                alt="Cygnus Development - Risk Intelligence Technology"
-                className="mx-auto max-h-[260px] w-full object-contain md:max-h-[300px]"
+            <div className="mt-6 overflow-hidden rounded-3xl border border-[#d8dee8] bg-white shadow-sm">
+              <div
+                className="min-h-[260px] bg-cover bg-center md:min-h-[320px]"
+                style={{
+                  backgroundImage: "url('/branding/cygnus-banner.png')",
+                }}
               />
             </div>
           </section>
@@ -1845,7 +1846,7 @@ export default function App() {
               <div className="text-left md:text-right">
                 <p>Cygnus Global Strategic Risk Intelligence Tracker</p>
                 <p className="mt-1 text-xs">
-                  v1.3.1 public preview · Banner display fix
+                  v1.3 public preview · Enhanced source and data curation
                 </p>
               </div>
             </div>
