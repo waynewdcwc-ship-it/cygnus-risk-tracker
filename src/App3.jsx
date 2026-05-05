@@ -77,8 +77,6 @@ const WORLD_BANK_INDICATORS = [
   },
 ];
 
-const RELIEFWEB_FIELDS = ["title", "date", "url", "country", "source"];
-
 
 function TrendIcon({ trend }) {
   if (trend === "Increasing") return <TrendingUp className="h-4 w-4" />;
@@ -211,7 +209,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v1.6.1 Public Preview
+        Interactive global map · v1.5 Public Preview
       </div>
     </div>
   );
@@ -854,7 +852,7 @@ function HelpMethodologyMode() {
         <p className="mt-4 max-w-4xl text-base leading-7 text-slate-700">
           This section explains how to read the tracker, what the key terms
           mean, how the risk and source-confidence layers are structured, and
-          how the v1.6.1 data status, curation, live data and OSINT source-access fields should be interpreted.
+          how the v1.5 data status, curation and live data fields should be interpreted.
         </p>
       </div>
 
@@ -1098,7 +1096,7 @@ function HelpMethodologyMode() {
             Public preview status
           </h3>
           <p className="mt-2 text-sm leading-6 text-slate-700">
-            In v1.6.1, indicators include curated public source references,
+            In v1.5, indicators include curated public source references,
             enhanced data curation fields, and a limited live data preview, but the tracker remains a public
             preview. It should not be treated as live intelligence reporting or
             formal advisory output.
@@ -1389,104 +1387,6 @@ function LiveDataPreviewPanel() {
   );
 }
 
-function ReliefWebCrisisWatchPanel() {
-  const sourceLinks = [
-    {
-      label: "Latest ReliefWeb reports",
-      url: "https://reliefweb.int/updates",
-      note: "Browse recent humanitarian, disaster, crisis and conflict-impact reporting directly on ReliefWeb.",
-    },
-    {
-      label: "ReliefWeb disasters",
-      url: "https://reliefweb.int/disasters",
-      note: "Review active and recent disaster pages for country and event-specific humanitarian context.",
-    },
-    {
-      label: "ReliefWeb countries",
-      url: "https://reliefweb.int/countries",
-      note: "Explore country-level humanitarian reporting and operational context.",
-    },
-    {
-      label: "ReliefWeb API documentation",
-      url: "https://apidoc.reliefweb.int/",
-      note: "ReliefWeb API V2 documentation. Live integration requires a pre-approved appname.",
-    },
-  ];
-
-  return (
-    <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-      <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-        <SectionTitle
-          icon={Signal}
-          title="ReliefWeb Crisis Watch"
-          subtitle="OSINT crisis-source access panel while ReliefWeb appname approval is pending."
-        />
-
-        <a
-          href="https://reliefweb.int/updates"
-          target="_blank"
-          rel="noreferrer"
-          className="mobile-full-button inline-flex items-center justify-center gap-2 rounded-2xl border border-[#d8dee8] bg-white px-4 py-3 text-sm font-semibold text-[#0a3d91] transition hover:border-[#0a3d91]"
-        >
-          Open ReliefWeb
-          <ExternalLink className="h-4 w-4" />
-        </a>
-      </div>
-
-      <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-          API approval pending
-        </h3>
-        <p className="mt-2 text-sm leading-6 text-slate-700">
-          ReliefWeb is retained as an OSINT crisis source, but the live in-page feed is temporarily disabled while Cygnus Development awaits a pre-approved ReliefWeb API appname. This prevents the public tracker from showing a failed feed while keeping crisis-source access available.
-        </p>
-        <p className="mt-2 text-xs leading-5 text-slate-500">
-          Once an approved appname is received, the live feed can be re-enabled using the ReliefWeb API V2 endpoint.
-        </p>
-      </div>
-
-      <div className="grid gap-3 md:grid-cols-2">
-        {sourceLinks.map((source) => (
-          <div
-            key={source.label}
-            className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4"
-          >
-            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-              <div>
-                <p className="font-semibold text-[#0a2f73]">{source.label}</p>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  {source.note}
-                </p>
-              </div>
-
-              <a
-                href={source.url}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d8dee8] bg-white px-3 py-1.5 text-xs font-semibold text-[#0a3d91] hover:border-[#0a3d91]"
-              >
-                Open
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-4 rounded-2xl border border-[#e3e8ef] bg-white p-4">
-        <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
-          <Info className="h-4 w-4" />
-          Crisis context rule
-        </h3>
-        <p className="mt-2 text-sm leading-6 text-slate-700">
-          ReliefWeb material should be treated as contextual OSINT. It does not automatically change Cygnus risk levels, trend direction, confidence ratings, review priority or planning assumptions.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-
 function PrintableBriefing({ selectedItem, lastUpdated }) {
   const referenceNumber = `CYG-GSRI-${String(selectedItem.id).padStart(
     3,
@@ -1522,7 +1422,7 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
           <div className="print-meta">
             <div className="print-meta-label">Tracker Version</div>
-            <div className="print-meta-value">v1.6.1 Public Preview</div>
+            <div className="print-meta-value">v1.5 Public Preview</div>
           </div>
 
           <div className="print-meta">
@@ -1732,7 +1632,7 @@ export default function App() {
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                   <Shield className="h-4 w-4 text-[#0a3d91]" />
-                  Tracker v1.6.1 · ReliefWeb Stability Fix
+                  Tracker v1.5 · Data Status & Review Workflow
                 </div>
 
                 <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -1859,10 +1759,10 @@ export default function App() {
 
                 <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.6 OSINT feed workflow
+                    v1.5 data status workflow
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    This release keeps the feed-first dashboard layout and replaces the failed ReliefWeb live feed with a stable OSINT source-access panel while appname approval is pending.
+                    This release adds a clearer data status and review workflow so users can see what is curated, what is live/open data, and what requires validation.
                   </p>
                 </div>
               </div>
@@ -1872,7 +1772,7 @@ export default function App() {
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.6.1 public preview
+                    v1.5 public preview
                   </p>
                   <p className="mt-2 text-sm leading-6 text-slate-700">
                     This tracker uses source-backed sample indicators and
@@ -1884,7 +1784,7 @@ export default function App() {
                 </div>
 
                 <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-semibold text-[#0a2f73]">
-                  Version 1.6.1
+                  Version 1.5
                 </div>
               </div>
             </div>
@@ -1927,63 +1827,12 @@ export default function App() {
           <HelpMethodologyMode />
         ) : (
           <section className="mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8">
-            <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-              <SectionTitle
-                icon={Database}
-                title="Live Feeds & Strategic Map"
-                subtitle="The dashboard now opens with the most useful operational context: live/open data feeds and the global risk map."
-              />
-              <p className="text-sm leading-6 text-slate-700">
-                Live/open data is shown first for situational awareness. The curated Cygnus assessment sections remain below the feeds so users can move from current context into structured analysis.
-              </p>
-            </div>
-
-            <div className="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-              <LiveDataPreviewPanel />
-              <ReliefWebCrisisWatchPanel />
-            </div>
-
-            <div className="mt-6 rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-              <SectionTitle
-                icon={Globe2}
-                title="Interactive Global Risk Map"
-                subtitle="Click a marker to select a curated risk indicator."
-              />
-
-              <GlobalRiskMap
-                items={riskItems}
-                selectedItem={selectedItem}
-                setSelectedItem={setSelectedItem}
-              />
-
-              <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-red-700">
-                  High risk
-                </span>
-                <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-amber-700">
-                  Medium risk
-                </span>
-                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-emerald-700">
-                  Low risk
-                </span>
-              </div>
-
-              <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-                <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                  Map handling note
-                </p>
-                <p className="mt-2 text-sm leading-6 text-slate-700">
-                  Map markers are curated Cygnus risk indicators, not automatically generated live events.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+            <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
               <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
                 <SectionTitle
                   icon={Layers}
-                  title="Curated Risk Indicator Cards"
-                  subtitle="Filter source-backed Cygnus indicators by category or keyword."
+                  title="Global Risk Indicator Cards"
+                  subtitle="Filter indicators by category or keyword."
                 />
 
                 <div className="mb-5 flex flex-col gap-3 sm:flex-row">
@@ -2066,67 +1915,95 @@ export default function App() {
                 </div>
               </div>
 
-              <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-                <SectionTitle
-                  icon={Info}
-                  title="Selected Indicator"
-                  subtitle="Current curated indicator metadata and source status."
-                />
+              <div className="space-y-6">
+                <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+                  <SectionTitle
+                    icon={Globe2}
+                    title="Interactive Global Map"
+                    subtitle="Click a marker to select a risk indicator."
+                  />
 
-                <div className="flex flex-wrap items-center gap-2">
-                  <LevelPill level={selectedItem.level} />
-                  <MetadataPill>
-                    Confidence: {selectedItem.confidence}
-                  </MetadataPill>
-                  <MetadataPill>Trend: {selectedItem.trend}</MetadataPill>
-                  <MetadataPill>
-                    Review: {selectedItem.reviewPriority}
-                  </MetadataPill>
+                  <GlobalRiskMap
+                    items={riskItems}
+                    selectedItem={selectedItem}
+                    setSelectedItem={setSelectedItem}
+                  />
+
+                  <div className="mt-4 flex flex-wrap gap-2 text-xs">
+                    <span className="rounded-full border border-red-200 bg-red-50 px-3 py-1 text-red-700">
+                      High risk
+                    </span>
+                    <span className="rounded-full border border-amber-200 bg-amber-50 px-3 py-1 text-amber-700">
+                      Medium risk
+                    </span>
+                    <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-emerald-700">
+                      Low risk
+                    </span>
+                  </div>
                 </div>
 
-                <h3 className="mt-4 text-lg font-semibold text-[#0a2f73]">
-                  {selectedItem.title}
-                </h3>
+                <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
+                  <SectionTitle
+                    icon={Info}
+                    title="Selected Indicator"
+                    subtitle="Current indicator metadata and source status."
+                  />
 
-                <p className="mt-2 text-sm leading-6 text-slate-700">
-                  {selectedItem.summary}
-                </p>
-
-                <div className="mt-4 grid gap-3">
-                  <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
-                    <p className="text-xs uppercase tracking-wide text-slate-500">
-                      Source reliability
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
-                      {selectedItem.sourceReliability}
-                    </p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <LevelPill level={selectedItem.level} />
+                    <MetadataPill>
+                      Confidence: {selectedItem.confidence}
+                    </MetadataPill>
+                    <MetadataPill>Trend: {selectedItem.trend}</MetadataPill>
+                    <MetadataPill>
+                      Review: {selectedItem.reviewPriority}
+                    </MetadataPill>
                   </div>
 
-                  <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
-                    <p className="text-xs uppercase tracking-wide text-slate-500">
-                      Information confidence
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
-                      {selectedItem.informationConfidence}
-                    </p>
-                  </div>
+                  <h3 className="mt-4 text-lg font-semibold text-[#0a2f73]">
+                    {selectedItem.title}
+                  </h3>
 
-                  <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
-                    <p className="text-xs uppercase tracking-wide text-slate-500">
-                      Review priority
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
-                      {selectedItem.reviewPriority}
-                    </p>
-                  </div>
+                  <p className="mt-2 text-sm leading-6 text-slate-700">
+                    {selectedItem.summary}
+                  </p>
 
-                  <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
-                    <p className="text-xs uppercase tracking-wide text-slate-500">
-                      Assessment status
-                    </p>
-                    <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
-                      {selectedItem.assessmentStatus}
-                    </p>
+                  <div className="mt-4 grid gap-3">
+                    <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">
+                        Source reliability
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                        {selectedItem.sourceReliability}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">
+                        Information confidence
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                        {selectedItem.informationConfidence}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">
+                        Review priority
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                        {selectedItem.reviewPriority}
+                      </p>
+                    </div>
+
+                    <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-3">
+                      <p className="text-xs uppercase tracking-wide text-slate-500">
+                        Assessment status
+                      </p>
+                      <p className="mt-1 text-sm font-semibold text-[#0a2f73]">
+                        {selectedItem.assessmentStatus}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2145,6 +2022,10 @@ export default function App() {
 
             <div className="mt-6">
               <DataStatusReviewPanel selectedItem={selectedItem} />
+            </div>
+
+            <div className="mt-6">
+              <LiveDataPreviewPanel />
             </div>
 
             <div className="mt-6">
@@ -2178,34 +2059,37 @@ export default function App() {
                 <SectionTitle
                   icon={Database}
                   title="Data Structure"
-                  subtitle="v1.6 uses a feed-first dashboard while preserving curated assessments."
+                  subtitle="v1.5 adds a data status and review workflow while keeping the curated source layer and live/open data preview separate."
                 />
 
                 <div className="space-y-3">
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Feed-first layout
+                      Enhanced curation
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Live/open data feeds and the interactive map are now displayed first because they provide immediate situational context.
+                      Each indicator includes curated data points, monitoring
+                      signals, intelligence gaps, analyst notes and source
+                      quality notes.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      ReliefWeb Crisis Watch
+                      Live data preview
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      ReliefWeb remains available as an OSINT crisis-source access panel while API appname approval is pending.
+                      The live data preview uses selected World Bank open data indicators for context without automatically changing risk assessments.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Curated assessments remain separate
+                      Review workflow
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Risk levels, trend, review priority and confidence remain reviewed Cygnus assessment fields.
+                      The data status workflow clarifies which parts are curated,
+                      which are live/open data, and which items still need validation.
                     </p>
                   </div>
                 </div>
@@ -2232,7 +2116,13 @@ export default function App() {
                     Sources & Disclaimer
                   </h3>
                   <p className="mt-2 text-sm leading-6 text-slate-700">
-                    This tracker combines live/open data context with curated Cygnus sample indicators. Live feeds are intended to support strategic awareness and monitoring. They should not be treated as official intelligence, legal advice, financial advice, or a substitute for professional judgement.
+                    This tracker currently uses source-backed sample indicators.
+                    Source references and reliability fields demonstrate the
+                    intended structure for future validated entries. The tracker
+                    is intended to support strategic awareness, scenario
+                    thinking, and decision support. It should not be treated as
+                    official intelligence, legal advice, financial advice, or a
+                    substitute for professional judgement.
                   </p>
                 </div>
               </div>
@@ -2263,7 +2153,7 @@ export default function App() {
               <div className="text-left md:text-right">
                 <p>Cygnus Global Strategic Risk Intelligence Tracker</p>
                 <p className="mt-1 text-xs">
-                  v1.6.1 public preview · ReliefWeb Crisis Watch and feed-first layout
+                  v1.5 public preview · Data status and review workflow
                 </p>
               </div>
             </div>

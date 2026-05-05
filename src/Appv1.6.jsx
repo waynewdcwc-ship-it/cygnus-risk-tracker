@@ -211,7 +211,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v1.6.1 Public Preview
+        Interactive global map · v1.6 Public Preview
       </div>
     </div>
   );
@@ -854,7 +854,7 @@ function HelpMethodologyMode() {
         <p className="mt-4 max-w-4xl text-base leading-7 text-slate-700">
           This section explains how to read the tracker, what the key terms
           mean, how the risk and source-confidence layers are structured, and
-          how the v1.6.1 data status, curation, live data and OSINT source-access fields should be interpreted.
+          how the v1.6 data status, curation, live data and OSINT feed fields should be interpreted.
         </p>
       </div>
 
@@ -1098,7 +1098,7 @@ function HelpMethodologyMode() {
             Public preview status
           </h3>
           <p className="mt-2 text-sm leading-6 text-slate-700">
-            In v1.6.1, indicators include curated public source references,
+            In v1.6, indicators include curated public source references,
             enhanced data curation fields, and a limited live data preview, but the tracker remains a public
             preview. It should not be treated as live intelligence reporting or
             formal advisory output.
@@ -1390,28 +1390,43 @@ function LiveDataPreviewPanel() {
 }
 
 function ReliefWebCrisisWatchPanel() {
-  const sourceLinks = [
-    {
-      label: "Latest ReliefWeb reports",
-      url: "https://reliefweb.int/updates",
-      note: "Browse recent humanitarian, disaster, crisis and conflict-impact reporting directly on ReliefWeb.",
-    },
-    {
-      label: "ReliefWeb disasters",
-      url: "https://reliefweb.int/disasters",
-      note: "Review active and recent disaster pages for country and event-specific humanitarian context.",
-    },
-    {
-      label: "ReliefWeb countries",
-      url: "https://reliefweb.int/countries",
-      note: "Explore country-level humanitarian reporting and operational context.",
-    },
-    {
-      label: "ReliefWeb API documentation",
-      url: "https://apidoc.reliefweb.int/",
-      note: "ReliefWeb API V2 documentation. Live integration requires a pre-approved appname.",
-    },
-  ];
+  const [reports, setReports] = useState([]);
+  const [status, setStatus] = useState("idle");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [fetchedAt, setFetchedAt] = useState(null);
+
+  const fetchReliefWebReports = async () => {
+    setStatus("loading");
+    setErrorMessage("");
+
+    try {
+      const params = new URLSearchParams();
+      params.set("appname", "cygnus-strategic-risk-tracker");
+      params.set("profile", "list");
+      params.set("preset", "latest");
+      params.set("limit", "6");
+      params.append("sort[]", "date:desc");
+      RELIEFWEB_FIELDS.forEach((field) => params.append("fields[include][]", field));
+
+      const response = await fetch(`https://api.reliefweb.int/v1/reports?${params.toString()}`);
+
+      if (!response.ok) {
+        throw new Error("ReliefWeb request failed");
+      }
+
+      const payload = await response.json();
+      setReports(Array.isArray(payload?.data) ? payload.data : []);
+      setFetchedAt(new Date());
+      setStatus("success");
+    } catch (error) {
+      setErrorMessage("ReliefWeb crisis reports could not be loaded. The curated tracker remains available.");
+      setStatus("error");
+    }
+  };
+
+  useEffect(() => {
+    fetchReliefWebReports();
+  }, []);
 
   return (
     <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
@@ -1419,69 +1434,82 @@ function ReliefWebCrisisWatchPanel() {
         <SectionTitle
           icon={Signal}
           title="ReliefWeb Crisis Watch"
-          subtitle="OSINT crisis-source access panel while ReliefWeb appname approval is pending."
+          subtitle="Live OSINT-style humanitarian, crisis, disaster, and conflict-impact reports from ReliefWeb."
         />
 
-        <a
-          href="https://reliefweb.int/updates"
-          target="_blank"
-          rel="noreferrer"
+        <button
+          onClick={fetchReliefWebReports}
           className="mobile-full-button inline-flex items-center justify-center gap-2 rounded-2xl border border-[#d8dee8] bg-white px-4 py-3 text-sm font-semibold text-[#0a3d91] transition hover:border-[#0a3d91]"
         >
-          Open ReliefWeb
-          <ExternalLink className="h-4 w-4" />
-        </a>
+          Refresh Crisis Feed
+        </button>
       </div>
 
       <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
         <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-          API approval pending
+          Live OSINT context only
         </h3>
         <p className="mt-2 text-sm leading-6 text-slate-700">
-          ReliefWeb is retained as an OSINT crisis source, but the live in-page feed is temporarily disabled while Cygnus Development awaits a pre-approved ReliefWeb API appname. This prevents the public tracker from showing a failed feed while keeping crisis-source access available.
+          ReliefWeb reports provide current open-source context. They do not automatically change Cygnus risk levels, trend direction, confidence ratings, or planning assumptions.
         </p>
-        <p className="mt-2 text-xs leading-5 text-slate-500">
-          Once an approved appname is received, the live feed can be re-enabled using the ReliefWeb API V2 endpoint.
+        <p className="mt-2 text-xs text-slate-500">
+          {fetchedAt ? `Last refreshed in browser: ${fetchedAt.toLocaleString()}` : "Refresh status pending"}
         </p>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2">
-        {sourceLinks.map((source) => (
-          <div
-            key={source.label}
-            className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4"
-          >
-            <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-              <div>
-                <p className="font-semibold text-[#0a2f73]">{source.label}</p>
-                <p className="mt-2 text-sm leading-6 text-slate-600">
-                  {source.note}
-                </p>
+      {status === "loading" && (
+        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4 text-sm text-slate-600">
+          Loading ReliefWeb crisis reports...
+        </div>
+      )}
+
+      {status === "error" && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-700">
+          {errorMessage}
+        </div>
+      )}
+
+      {status === "success" && (
+        <div className="grid gap-3">
+          {reports.map((item) => {
+            const fields = item.fields || {};
+            const countries = Array.isArray(fields.country)
+              ? fields.country.map((country) => country.name).filter(Boolean).join(", ")
+              : "Region not specified";
+            const sources = Array.isArray(fields.source)
+              ? fields.source.map((source) => source.name).filter(Boolean).join(", ")
+              : "Source not specified";
+            const date = fields.date?.created || fields.date?.original || "Date unavailable";
+
+            return (
+              <div key={item.id || fields.url || fields.title} className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
+                <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                  <div>
+                    <p className="font-semibold leading-6 text-[#0a2f73]">
+                      {fields.title || "Untitled ReliefWeb report"}
+                    </p>
+                    <p className="mt-2 text-xs text-slate-500">Region: {countries}</p>
+                    <p className="mt-1 text-xs text-slate-500">Source: {sources}</p>
+                    <p className="mt-1 text-xs text-slate-500">Date: {String(date).slice(0, 10)}</p>
+                  </div>
+
+                  {fields.url && (
+                    <a
+                      href={fields.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d8dee8] bg-white px-3 py-1.5 text-xs font-semibold text-[#0a3d91] hover:border-[#0a3d91]"
+                    >
+                      Open report
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
+                  )}
+                </div>
               </div>
-
-              <a
-                href={source.url}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d8dee8] bg-white px-3 py-1.5 text-xs font-semibold text-[#0a3d91] hover:border-[#0a3d91]"
-              >
-                Open
-                <ExternalLink className="h-3.5 w-3.5" />
-              </a>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-4 rounded-2xl border border-[#e3e8ef] bg-white p-4">
-        <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
-          <Info className="h-4 w-4" />
-          Crisis context rule
-        </h3>
-        <p className="mt-2 text-sm leading-6 text-slate-700">
-          ReliefWeb material should be treated as contextual OSINT. It does not automatically change Cygnus risk levels, trend direction, confidence ratings, review priority or planning assumptions.
-        </p>
-      </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -1522,7 +1550,7 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
           <div className="print-meta">
             <div className="print-meta-label">Tracker Version</div>
-            <div className="print-meta-value">v1.6.1 Public Preview</div>
+            <div className="print-meta-value">v1.6 Public Preview</div>
           </div>
 
           <div className="print-meta">
@@ -1732,7 +1760,7 @@ export default function App() {
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                   <Shield className="h-4 w-4 text-[#0a3d91]" />
-                  Tracker v1.6.1 · ReliefWeb Stability Fix
+                  Tracker v1.6 · ReliefWeb Crisis Watch & Feed-First Layout
                 </div>
 
                 <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -1862,7 +1890,7 @@ export default function App() {
                     v1.6 OSINT feed workflow
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    This release keeps the feed-first dashboard layout and replaces the failed ReliefWeb live feed with a stable OSINT source-access panel while appname approval is pending.
+                    This release moves live/open data feeds and the strategic map to the top of the dashboard, and adds a ReliefWeb Crisis Watch feed for OSINT-style crisis context.
                   </p>
                 </div>
               </div>
@@ -1872,7 +1900,7 @@ export default function App() {
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.6.1 public preview
+                    v1.6 public preview
                   </p>
                   <p className="mt-2 text-sm leading-6 text-slate-700">
                     This tracker uses source-backed sample indicators and
@@ -1884,7 +1912,7 @@ export default function App() {
                 </div>
 
                 <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-semibold text-[#0a2f73]">
-                  Version 1.6.1
+                  Version 1.6
                 </div>
               </div>
             </div>
@@ -2196,7 +2224,7 @@ export default function App() {
                       ReliefWeb Crisis Watch
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      ReliefWeb remains available as an OSINT crisis-source access panel while API appname approval is pending.
+                      ReliefWeb reports add OSINT-style humanitarian, crisis and disaster context without changing Cygnus ratings automatically.
                     </p>
                   </div>
 
@@ -2263,7 +2291,7 @@ export default function App() {
               <div className="text-left md:text-right">
                 <p>Cygnus Global Strategic Risk Intelligence Tracker</p>
                 <p className="mt-1 text-xs">
-                  v1.6.1 public preview · ReliefWeb Crisis Watch and feed-first layout
+                  v1.6 public preview · ReliefWeb Crisis Watch and feed-first layout
                 </p>
               </div>
             </div>
