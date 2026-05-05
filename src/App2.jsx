@@ -209,7 +209,7 @@ function GlobalRiskMap({ items, selectedItem, setSelectedItem }) {
       </MapContainer>
 
       <div className="absolute bottom-4 left-4 z-[500] rounded-xl border border-[#d8dee8] bg-white/95 px-3 py-2 text-xs text-slate-600 shadow-sm">
-        Interactive global map · v1.5 Public Preview
+        Interactive global map · v1.4 Public Preview
       </div>
     </div>
   );
@@ -852,7 +852,7 @@ function HelpMethodologyMode() {
         <p className="mt-4 max-w-4xl text-base leading-7 text-slate-700">
           This section explains how to read the tracker, what the key terms
           mean, how the risk and source-confidence layers are structured, and
-          how the v1.5 data status, curation and live data fields should be interpreted.
+          how the v1.4 data curation and live data fields should be interpreted.
         </p>
       </div>
 
@@ -1096,7 +1096,7 @@ function HelpMethodologyMode() {
             Public preview status
           </h3>
           <p className="mt-2 text-sm leading-6 text-slate-700">
-            In v1.5, indicators include curated public source references,
+            In v1.4, indicators include curated public source references,
             enhanced data curation fields, and a limited live data preview, but the tracker remains a public
             preview. It should not be treated as live intelligence reporting or
             formal advisory output.
@@ -1104,150 +1104,6 @@ function HelpMethodologyMode() {
         </div>
       </div>
     </section>
-  );
-}
-
-function DataStatusReviewPanel({ selectedItem }) {
-  const statusRows = [
-    {
-      layer: "Curated assessment layer",
-      status: "Manual Cygnus review",
-      refresh: "Refresh when sources change or monitoring signals escalate",
-      use: "Supports structured risk interpretation and scenario planning",
-    },
-    {
-      layer: "Source-backed indicator layer",
-      status: "Curated public sources",
-      refresh: "Review source links and notes during each update cycle",
-      use: "Shows the evidence base behind sample indicators",
-    },
-    {
-      layer: "Live/open data context",
-      status: "Fetched from open data where available",
-      refresh: "Refresh in-browser; does not change risk ratings automatically",
-      use: "Provides factual context only, not intelligence judgement",
-    },
-    {
-      layer: "Intelligence gaps",
-      status: "Open validation requirements",
-      refresh: "Close gaps before formal advisory or client-facing use",
-      use: "Shows what still needs research or verification",
-    },
-  ];
-
-  return (
-    <div className="rounded-3xl border border-[#d8dee8] bg-white p-5 shadow-sm md:p-6">
-      <SectionTitle
-        icon={SearchCheck}
-        title="Data Status & Review Workflow"
-        subtitle="Shows what is curated, what is live/open data, and what still needs validation before formal use."
-      />
-
-      <div className="grid gap-4 lg:grid-cols-4">
-        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-          <div className="flex items-center gap-2 text-[#0a3d91]">
-            <Shield className="h-4 w-4" />
-            <h3 className="font-semibold">Curated Assessment</h3>
-          </div>
-          <p className="mt-3 text-lg font-bold text-[#0a2f73]">Manual review</p>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            Risk ratings remain curated and are not automatically changed by live data.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-          <div className="flex items-center gap-2 text-[#0a3d91]">
-            <CalendarDays className="h-4 w-4" />
-            <h3 className="font-semibold">Last Review</h3>
-          </div>
-          <p className="mt-3 text-lg font-bold text-[#0a2f73]">{lastUpdated}</p>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            This reflects the current public preview review date for the curated data layer.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-          <div className="flex items-center gap-2 text-[#0a3d91]">
-            <Signal className="h-4 w-4" />
-            <h3 className="font-semibold">Refresh Triggers</h3>
-          </div>
-          <p className="mt-3 text-lg font-bold text-[#0a2f73]">Monitoring signals</p>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            Major changes in monitoring signals should trigger a review of the selected indicator.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
-          <div className="flex items-center gap-2 text-[#0a3d91]">
-            <Database className="h-4 w-4" />
-            <h3 className="font-semibold">Live Data Status</h3>
-          </div>
-          <p className="mt-3 text-lg font-bold text-[#0a2f73]">Context only</p>
-          <p className="mt-2 text-sm leading-6 text-slate-600">
-            Open data supports awareness but is not treated as an assessed intelligence product.
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-4 rounded-2xl border border-[#e3e8ef] bg-white p-4">
-        <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
-          <ClipboardList className="h-4 w-4" />
-          Review Workflow
-        </h3>
-
-        <div className="mt-3 grid gap-3">
-          {statusRows.map((row) => (
-            <div
-              key={row.layer}
-              className="grid gap-3 rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4 lg:grid-cols-[0.9fr_0.8fr_1.1fr_1.1fr]"
-            >
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-500">Layer</p>
-                <p className="mt-1 font-semibold text-[#0a2f73]">{row.layer}</p>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-500">Status</p>
-                <p className="mt-1 text-sm font-semibold text-slate-700">{row.status}</p>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-500">Refresh rule</p>
-                <p className="mt-1 text-sm leading-6 text-slate-600">{row.refresh}</p>
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wide text-slate-500">Use</p>
-                <p className="mt-1 text-sm leading-6 text-slate-600">{row.use}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        <div className="rounded-2xl border border-[#e3e8ef] bg-white p-4">
-          <h3 className="flex items-center gap-2 font-semibold text-[#0a2f73]">
-            <FileText className="h-4 w-4" />
-            Selected Indicator Review Status
-          </h3>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <MetadataPill>Review priority: {selectedItem.reviewPriority}</MetadataPill>
-            <MetadataPill>Confidence: {selectedItem.confidence}</MetadataPill>
-            <MetadataPill>Source: {selectedItem.sourceReliability}</MetadataPill>
-          </div>
-          <p className="mt-3 text-sm leading-6 text-slate-700">
-            Review this indicator first if its monitoring signals escalate, its source base changes, or its intelligence gaps need to be closed for formal use.
-          </p>
-        </div>
-
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-            Credibility rule
-          </h3>
-          <p className="mt-2 text-sm leading-6 text-slate-700">
-            Cygnus separates raw/open data from curated assessment. Live data can support context and review triggers, but a human review should remain responsible for any risk-rating or planning-assumption change.
-          </p>
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -1422,7 +1278,7 @@ function PrintableBriefing({ selectedItem, lastUpdated }) {
 
           <div className="print-meta">
             <div className="print-meta-label">Tracker Version</div>
-            <div className="print-meta-value">v1.5 Public Preview</div>
+            <div className="print-meta-value">v1.4 Public Preview</div>
           </div>
 
           <div className="print-meta">
@@ -1632,7 +1488,7 @@ export default function App() {
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d8dee8] bg-white/90 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm">
                   <Shield className="h-4 w-4 text-[#0a3d91]" />
-                  Tracker v1.5 · Data Status & Review Workflow
+                  Tracker v1.4 · Live Data Preview Panel
                 </div>
 
                 <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-[#0a2f73] md:text-6xl">
@@ -1647,7 +1503,7 @@ export default function App() {
                   A public preview of the Cygnus strategic risk intelligence
                   framework — now with enhanced curated data points, monitoring
                   signals, intelligence gaps, analyst notes, source quality
-                  notes, a limited live/open data preview, and a clearer data status and review workflow.
+                  notes, and a limited live/open data preview.
                 </p>
 
                 <div className="mt-6 grid gap-3 sm:grid-cols-3">
@@ -1673,10 +1529,10 @@ export default function App() {
 
                   <div className="rounded-2xl border border-[#d8dee8] bg-white/95 p-4 shadow-sm">
                     <p className="font-semibold text-[#0a2f73]">
-                      Review status
+                      Expose gaps
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      Separate curated assessments, live context and validation needs.
+                      Keep intelligence gaps visible before formal use.
                     </p>
                   </div>
                 </div>
@@ -1759,10 +1615,10 @@ export default function App() {
 
                 <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                   <p className="text-xs font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.5 data status workflow
+                    v1.4 live data preview
                   </p>
                   <p className="mt-1 text-sm leading-6 text-slate-700">
-                    This release adds a clearer data status and review workflow so users can see what is curated, what is live/open data, and what requires validation.
+                    This release adds a limited live/open data preview panel while keeping the curated risk assessments separate and controlled.
                   </p>
                 </div>
               </div>
@@ -1772,7 +1628,7 @@ export default function App() {
               <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-wide text-[#b8862b]">
-                    v1.5 public preview
+                    v1.4 public preview
                   </p>
                   <p className="mt-2 text-sm leading-6 text-slate-700">
                     This tracker uses source-backed sample indicators and
@@ -1784,7 +1640,7 @@ export default function App() {
                 </div>
 
                 <div className="shrink-0 rounded-2xl border border-amber-200 bg-white px-4 py-3 text-sm font-semibold text-[#0a2f73]">
-                  Version 1.5
+                  Version 1.4
                 </div>
               </div>
             </div>
@@ -2021,10 +1877,6 @@ export default function App() {
             </div>
 
             <div className="mt-6">
-              <DataStatusReviewPanel selectedItem={selectedItem} />
-            </div>
-
-            <div className="mt-6">
               <LiveDataPreviewPanel />
             </div>
 
@@ -2059,7 +1911,7 @@ export default function App() {
                 <SectionTitle
                   icon={Database}
                   title="Data Structure"
-                  subtitle="v1.5 adds a data status and review workflow while keeping the curated source layer and live/open data preview separate."
+                  subtitle="v1.4 keeps the curated source layer and adds a limited live/open data panel."
                 />
 
                 <div className="space-y-3">
@@ -2079,17 +1931,17 @@ export default function App() {
                       Live data preview
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      The live data preview uses selected World Bank open data indicators for context without automatically changing risk assessments.
+                      The new live data preview uses selected World Bank open data indicators for context without automatically changing risk assessments.
                     </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#e3e8ef] bg-[#f8fafc] p-4">
                     <p className="font-semibold text-[#0a2f73]">
-                      Review workflow
+                      Future live-data path
                     </p>
                     <p className="mt-2 text-sm leading-6 text-slate-600">
-                      The data status workflow clarifies which parts are curated,
-                      which are live/open data, and which items still need validation.
+                      This static curation layer prepares the tracker for later,
+                      carefully controlled live-data panels.
                     </p>
                   </div>
                 </div>
@@ -2153,7 +2005,7 @@ export default function App() {
               <div className="text-left md:text-right">
                 <p>Cygnus Global Strategic Risk Intelligence Tracker</p>
                 <p className="mt-1 text-xs">
-                  v1.5 public preview · Data status and review workflow
+                  v1.4 public preview · Live data preview
                 </p>
               </div>
             </div>
